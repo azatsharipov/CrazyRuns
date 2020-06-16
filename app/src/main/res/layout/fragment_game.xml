@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_margin="@dimen/border_margin"
+    tools:context=".game.GameFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stats:"
+            android:textSize="@dimen/common_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/border_margin">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_gravity="center_vertical"
+                android:text="Speed"/>
+            <TextView
+                android:id="@+id/tv_speed_points"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_gravity="center_vertical"
+                android:text="1"/>
+            <Button
+                android:id="@+id/bt_speed"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:text="ADD"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/border_margin">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_gravity="center_vertical"
+                android:text="Stamina"/>
+            <TextView
+                android:id="@+id/tv_stamina_points"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_gravity="center_vertical"
+                android:text="2"/>
+            <Button
+                android:id="@+id/bt_stamina"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:text="ADD"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/border_margin">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_gravity="center_vertical"
+                android:text="Agility"/>
+            <TextView
+                android:id="@+id/tv_agility_points"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_gravity="center_vertical"
+                android:text="3"/>
+            <Button
+                android:id="@+id/bt_agility"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:text="ADD"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/border_margin">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_gravity="center_vertical"
+                android:text="Reaction"/>
+            <TextView
+                android:id="@+id/tv_reaction_points"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_gravity="center_vertical"
+                android:text="4"/>
+            <Button
+                android:id="@+id/bt_reaction"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text"
+                android:text="ADD"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_race"
+                android:text="Race!"
+                android:textSize="@dimen/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_available_points"
+                android:layout_marginLeft="@dimen/border_margin"
+                android:text="Points: 0"
+                android:textSize="@dimen/common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/border_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="№"
+                android:textSize="@dimen/common_text"
+                android:layout_weight="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="Player's Name"
+                android:textSize="@dimen/common_text"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="P"
+                android:textSize="@dimen/common_text"
+                android:layout_weight="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_players"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/racer_item"/>
+    </LinearLayout>
+
+</LinearLayout>

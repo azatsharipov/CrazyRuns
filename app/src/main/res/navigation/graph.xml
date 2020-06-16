@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph"
+    app:startDestination="@id/startMenuFragment">
+
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.example.crazyruns.game.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game" />
+    <fragment
+        android:id="@+id/startMenuFragment"
+        android:name="com.example.crazyruns.mainMenu.StartMenuFragment"
+        android:label="fragment_start_menu"
+        tools:layout="@layout/fragment_start_menu" >
+        <action
+            android:id="@+id/toGameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/speedFragment"
+        android:name="com.example.crazyruns.game.SpeedFragment"
+        android:label="fragment_speed"
+        tools:layout="@layout/fragment_speed" >
+        <action
+            android:id="@+id/backToGameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/raceFragment"
+        android:name="com.example.crazyruns.game.RaceFragment"
+        android:label="fragment_race"
+        tools:layout="@layout/fragment_race" />
+</navigation>
