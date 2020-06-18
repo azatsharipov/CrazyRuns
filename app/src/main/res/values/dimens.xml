@@ -4,4 +4,5 @@
     <dimen name="border_margin">12dp</dimen>
     <dimen name="number_size">30sp</dimen>
     <dimen name="big_timer">100sp</dimen>
+    <dimen name="half_screen_y">100dp</dimen>
 </resources>

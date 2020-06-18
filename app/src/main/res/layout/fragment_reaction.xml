@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_reaction"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".game.ReactionFragment">
+
+    <TextView
+        android:id="@+id/tv_touch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/half_screen_y"
+        android:layout_gravity="center"
+        android:textSize="@dimen/common_text"
+        android:text="@string/tap_on_screen" />
+
+    <TextView
+        android:id="@+id/tv_reaction_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/border_margin"
+        android:layout_gravity="center"
+        android:textSize="@dimen/big_timer"
+        android:text="10" />
+
+</LinearLayout>

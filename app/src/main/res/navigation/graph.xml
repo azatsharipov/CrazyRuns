@@ -33,4 +33,9 @@
         android:name="com.example.crazyruns.game.RaceFragment"
         android:label="fragment_race"
         tools:layout="@layout/fragment_race" />
+    <fragment
+        android:id="@+id/reactionFragment"
+        android:name="com.example.crazyruns.game.ReactionFragment"
+        android:label="fragment_reaction"
+        tools:layout="@layout/fragment_reaction" />
 </navigation>

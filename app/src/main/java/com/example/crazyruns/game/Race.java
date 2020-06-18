@@ -25,6 +25,7 @@ public class Race extends View implements Runnable {
     ArrayList<Integer> places;
     Paint paint = null;
     boolean isRunning;
+    boolean isGameOver;
     RaceFragment rf;
     int timeLeft;
 
@@ -78,7 +79,7 @@ public class Race extends View implements Runnable {
             Racer racer = racers.get(i);
             canvas.drawCircle(racer.getPosX(), racer.getPosY(), radius, paint);
         }
-        if (!isRunning) {
+        if (!isRunning && !isGameOver) {
             float textSize = 100;
             paint.setColor(Color.BLACK);
             paint.setTextSize(textSize);
@@ -130,7 +131,7 @@ public class Race extends View implements Runnable {
                 postInvalidate();
                 delta--;
             }
-            boolean isGameOver = true;
+            isGameOver = true;
             for (int i = 0; i < racers.size(); i++) {
                 Racer racer = racers.get(i);
                 if (racer.getPosX() <= distance + 100) {

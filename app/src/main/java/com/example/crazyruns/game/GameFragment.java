@@ -83,6 +83,11 @@ public class GameFragment extends Fragment {
             if (points != 1)
                 players.get(0).setSpeed(players.get(0).getSpeed() + points);
             points = bundle.getInt("STAMINA_POINTS", 1);
+            if (points != 1)
+                players.get(0).setStamina(players.get(0).getStamina() + points);
+            points = bundle.getInt("REACTION_POINTS", 1);
+            if (points != 1)
+                players.get(0).setReaction(players.get(0).getReaction() + points);
             for (int i = 0; i < 10; i++) {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
                 if (points != -1) {
@@ -113,6 +118,17 @@ public class GameFragment extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                 navController.popBackStack();
                 navController.navigate(R.id.speedFragment);
+            }
+        });
+
+        btReaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                availablePoints--;
+                saveData();
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.popBackStack();
+                navController.navigate(R.id.reactionFragment);
             }
         });
 
