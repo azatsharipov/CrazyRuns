@@ -49,9 +49,9 @@ public class ReactionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (points == -1) {
-                    view.setBackgroundColor(Color.RED);
+                    view.setBackgroundColor(Color.GREEN);
                     tvTouch.setText(R.string.touched);
-                    tvTouch.setText(tvTouch.getText() + " " + String.valueOf(timeLeft));
+                    tvTouch.setText(tvTouch.getText() + " " + String.valueOf(round(timeLeft, 2)));
                     points = Math.max(0, (300 - Math.round(Math.abs(timeLeft) * 100)) / 6);
                 }
             }
@@ -59,7 +59,7 @@ public class ReactionFragment extends Fragment {
         timeLeft = 10.00f;
         timer = new Timer();
         timerTask = new MyTimeTask();
-        timer.schedule(timerTask, 0, 10);
+        timer.schedule(timerTask, 1000, 10);
         points = -1;
 
         return root;
@@ -92,11 +92,12 @@ public class ReactionFragment extends Fragment {
                 cancel();
             }
         }
-        BigDecimal round (float f, int d) {
-            BigDecimal bd = new BigDecimal(Float.toString(f));
-            bd = bd.setScale(d, BigDecimal.ROUND_HALF_UP);
-            return bd;
-        }
+    }
+
+    BigDecimal round (float f, int d) {
+        BigDecimal bd = new BigDecimal(Float.toString(f));
+        bd = bd.setScale(d, BigDecimal.ROUND_HALF_UP);
+        return bd;
     }
 
 }

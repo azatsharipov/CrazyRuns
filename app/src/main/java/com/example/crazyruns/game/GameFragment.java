@@ -121,6 +121,17 @@ public class GameFragment extends Fragment {
             }
         });
 
+        btStamina.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                availablePoints--;
+                saveData();
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.popBackStack();
+                navController.navigate(R.id.staminaFragment);
+            }
+        });
+
         btReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

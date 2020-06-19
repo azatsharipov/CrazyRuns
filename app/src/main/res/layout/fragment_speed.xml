@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="0"
-            android:textSize="40sp" />
+            android:textSize="@dimen/big_text" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="30"
-            android:textSize="40sp" />
+            android:textSize="@dimen/big_text" />
     </FrameLayout>
 
     <GridLayout

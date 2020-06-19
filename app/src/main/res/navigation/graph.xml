@@ -38,4 +38,14 @@
         android:name="com.example.crazyruns.game.ReactionFragment"
         android:label="fragment_reaction"
         tools:layout="@layout/fragment_reaction" />
+    <fragment
+        android:id="@+id/staminaFragment"
+        android:name="com.example.crazyruns.game.StaminaFragment"
+        android:label="fragment_stamina"
+        tools:layout="@layout/fragment_stamina" />
+    <fragment
+        android:id="@+id/agilityFragment"
+        android:name="com.example.crazyruns.game.AgilityFragment"
+        android:label="fragment_agility"
+        tools:layout="@layout/fragment_agility" />
 </navigation>

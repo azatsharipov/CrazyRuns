@@ -56,7 +56,8 @@ public class SpeedFragment extends Fragment {
         points = 0;
         tvPoints = root.findViewById(R.id.tv_points);
         tvTime = root.findViewById(R.id.tv_time);
-        timeLeft = 10;
+        timeLeft = 15;
+        tvTime.setText(String.valueOf(timeLeft));
         bt1 = root.findViewById(R.id.bt_1);
         bt2 = root.findViewById(R.id.bt_2);
         bt3 = root.findViewById(R.id.bt_3);
@@ -94,15 +95,31 @@ public class SpeedFragment extends Fragment {
         bt7.setOnClickListener(onNumberClick);
         bt8.setOnClickListener(onNumberClick);
         bt9.setOnClickListener(onNumberClick);
-        setWaiting();
+        bt1.setVisibility(View.INVISIBLE);
+        bt2.setVisibility(View.INVISIBLE);
+        bt3.setVisibility(View.INVISIBLE);
+        bt4.setVisibility(View.INVISIBLE);
+        bt5.setVisibility(View.INVISIBLE);
+        bt6.setVisibility(View.INVISIBLE);
+        bt7.setVisibility(View.INVISIBLE);
+        bt8.setVisibility(View.INVISIBLE);
+        bt9.setVisibility(View.INVISIBLE);
         timer = new Timer();
         timerTask = new MyTimeTask();
-        timer.schedule(timerTask, 0, 1000);
+        timer.schedule(timerTask, 1000, 1000);
         return root;
     }
 
     class MyTimeTask extends TimerTask {
         public void run() {
+            if (timeLeft == 15) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setWaiting();
+                    }
+                });
+            }
             timeLeft--;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
