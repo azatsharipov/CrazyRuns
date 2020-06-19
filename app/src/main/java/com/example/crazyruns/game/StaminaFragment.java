@@ -148,7 +148,7 @@ public class StaminaFragment extends Fragment {
     private void gameOver () {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Bundle bundle = new Bundle();
-        bundle.putInt("STAMINA_POINTS", points * 2);
+        bundle.putInt("STAMINA_POINTS", points * 4);
         navController.popBackStack();
         navController.navigate(R.id.gameFragment, bundle);
     }
