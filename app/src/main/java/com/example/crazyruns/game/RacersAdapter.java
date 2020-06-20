@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHolder> {
-    ArrayList<Player> players;
+    ArrayList<Player> players = new ArrayList<>();
 
     public RacersAdapter(ArrayList<Player> players) {
         Comparator cmp = new Comparator<Player>() {
@@ -29,8 +29,8 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
                     return 0;
             }
         };
-        Collections.sort(players, cmp);
-        this.players = players;
+        this.players = (ArrayList<Player>) players.clone();
+        Collections.sort(this.players, cmp);
         for (int i = 0; i < this.players.size(); i++) {
             this.players.get(i).setListNumber(i + 1);
         }

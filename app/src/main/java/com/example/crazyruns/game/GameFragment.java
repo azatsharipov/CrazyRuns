@@ -38,7 +38,6 @@ public class GameFragment extends Fragment {
     private TextView tvReaction;
     private TextView tvAvailablePoints;
     private Button btRace;
-    private int playersAmount;
     private ArrayList<Player> players;
     private RecyclerView recyclerView;
     private RacersAdapter adapter;
@@ -70,9 +69,8 @@ public class GameFragment extends Fragment {
         players = new ArrayList<>();
         players.add(new Player(100, 100, 100, 100));
         players.add(new Player(200, 200, 200, 200));
-        players.add(new Player(500, 500, 500, 500));
-        players.add(new Player(999, 999, 999, 999));
-        playersAmount = players.size();
+        players.add(new Player(300, 300, 300, 300));
+        players.add(new Player(400, 400, 400, 400));
         loadData();
 
         updateStats();
@@ -172,7 +170,7 @@ public class GameFragment extends Fragment {
 
     void loadData() {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
-        for (int i = 0; i < playersAmount; i++) {
+        for (int i = 0; i < players.size(); i++) {
             int points = sPref.getInt("POINTS" + String.valueOf(i), 0);
             players.get(i).setPoints(points);
             int speedPoints = sPref.getInt("SPEED_POINTS" + String.valueOf(i), 1);
@@ -193,9 +191,10 @@ public class GameFragment extends Fragment {
     void saveData() {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
-        ed.putInt("PLAYERS_AMOUNT", playersAmount);
-        for (int i = 0; i < playersAmount; i++) {
+        ed.putInt("PLAYERS_AMOUNT", players.size());
+        for (int i = 0; i < players.size(); i++) {
             ed.putInt("POINTS" + String.valueOf(i), players.get(i).getPoints());
+            int speedPoints = players.get(i).getSpeed();
             ed.putInt("SPEED_POINTS" + String.valueOf(i), players.get(i).getSpeed());
             ed.putInt("STAMINA_POINTS" + String.valueOf(i), players.get(i).getStamina());
             ed.putInt("AGILITY_POINTS" + String.valueOf(i), players.get(i).getAgility());

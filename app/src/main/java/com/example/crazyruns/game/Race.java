@@ -23,13 +23,14 @@ public class Race extends View implements Runnable {
     ArrayList<Racer> racers;
     ArrayList<Integer> colors;
     ArrayList<Integer> places;
+    ArrayList<Boolean> jumps;
     Paint paint = null;
     boolean isRunning;
     boolean isGameOver;
     RaceFragment rf;
     int timeLeft;
 
-    public Race(Context context, RaceFragment rf, ArrayList<Racer> racers, int distance) {
+    public Race(Context context, RaceFragment rf, ArrayList<Racer> racers, int distance, ArrayList<Boolean> jumps) {
         super(context);
         Log.e("MY", "Race");
         this.rf = rf;
@@ -42,6 +43,7 @@ public class Race extends View implements Runnable {
         colors.add(Color.GREEN);
         colors.add(Color.YELLOW);
         places = new ArrayList<>();
+        this.jumps = jumps;
         this.distance = distance;
     }
 
@@ -100,7 +102,9 @@ public class Race extends View implements Runnable {
         float topLine = 250;
         for (int i = 0; i <= distance; i += 100) {
             canvas.drawText(String.valueOf(i) + "m", 50 + i, 225, paint);
-            canvas.drawLine(100 + i, 250, 100 + i, 250 + racers.size() * 100, paint);
+            if (jumps.get(i / 100)) {
+                canvas.drawLine(100 + i, 250, 100 + i, 250 + racers.size() * 100, paint);
+            }
         }
         for (int i = 0; i <= racers.size(); i++) {
             canvas.drawLine(0, topLine + i * 100,
@@ -152,7 +156,7 @@ public class Race extends View implements Runnable {
     private void updateGame() {
         for (int i = 0; i < racers.size(); i++) {
             Racer racer = racers.get(i);
-            racer.move(false, raceTime);
+            racer.move(jumps, raceTime);
         }
     }
 }

@@ -26,6 +26,7 @@ import com.example.crazyruns.R;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -35,6 +36,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class RaceFragment extends Fragment {
     private Race race;
     private ArrayList<Racer> racers = new ArrayList<>();
+    private int distance;
+    private ArrayList<Boolean> jumps = new ArrayList<>();
     private Timer timer;
     private RaceFragment.MyTimeTask timerTask;
     private int timeLeft;
@@ -51,7 +54,8 @@ public class RaceFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_race, container, false);
         Log.e("MY", "Fragment");
         loadStats();
-        race = new Race(getActivity(), this, racers, 200);
+        setRace();
+        race = new Race(getActivity(), this, racers, distance, jumps);
 
         timeLeft = 4;
         timer = new Timer();
@@ -59,6 +63,19 @@ public class RaceFragment extends Fragment {
         timer.schedule(timerTask, 0, 1000);
 
         return race;
+    }
+
+    void setRace() {
+        distance = 200;
+        jumps.clear();
+        for (int i = 0; i <= distance; i += 100) {
+            int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
+            if (randomNum == 1 || i == 0 || i == distance) {
+                jumps.add(true);
+            } else {
+                jumps.add(false);
+            }
+        }
     }
 
     void loadStats() {
