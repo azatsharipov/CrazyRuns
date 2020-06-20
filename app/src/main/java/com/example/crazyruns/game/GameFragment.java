@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.crazyruns.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -37,11 +38,15 @@ public class GameFragment extends Fragment {
     private TextView tvAgility;
     private TextView tvReaction;
     private TextView tvAvailablePoints;
+    private TextView tvDistance;
+    private TextView tvJumpsAmount;
     private Button btRace;
     private ArrayList<Player> players;
     private RecyclerView recyclerView;
     private RacersAdapter adapter;
     private int availablePoints = 2;
+    private int distance;
+    private int jumpsAmount;
     private SharedPreferences sPref;
 
     public GameFragment() {
@@ -62,17 +67,20 @@ public class GameFragment extends Fragment {
         tvAgility = root.findViewById(R.id.tv_agility_points);
         tvReaction = root.findViewById(R.id.tv_reaction_points);
         tvAvailablePoints = root.findViewById(R.id.tv_available_points);
+        tvDistance = root.findViewById(R.id.tv_distance);
+        tvJumpsAmount = root.findViewById(R.id.tv_jumps_amount);
         btRace = root.findViewById(R.id.bt_race);
 
         tvAvailablePoints.setText("Points: " + String.valueOf(availablePoints));
 
         players = new ArrayList<>();
-        players.add(new Player(100, 100, 100, 100));
-        players.add(new Player(200, 200, 200, 200));
-        players.add(new Player(300, 300, 300, 300));
-        players.add(new Player(400, 400, 400, 400));
+        players.add(new Player("I", 400, 200, 200, 200));
+        players.add(new Player("2", 200, 400, 200, 200));
+        players.add(new Player("3", 200, 200, 400, 200));
+        players.add(new Player("4", 200, 200, 200, 400));
         loadData();
 
+        randomRace();
         updateStats();
 
         Bundle bundle = getArguments();
@@ -194,7 +202,7 @@ public class GameFragment extends Fragment {
         ed.putInt("PLAYERS_AMOUNT", players.size());
         for (int i = 0; i < players.size(); i++) {
             ed.putInt("POINTS" + String.valueOf(i), players.get(i).getPoints());
-            int speedPoints = players.get(i).getSpeed();
+            ed.putString("NAME" + String.valueOf(i), players.get(i).getName());
             ed.putInt("SPEED_POINTS" + String.valueOf(i), players.get(i).getSpeed());
             ed.putInt("STAMINA_POINTS" + String.valueOf(i), players.get(i).getStamina());
             ed.putInt("AGILITY_POINTS" + String.valueOf(i), players.get(i).getAgility());
@@ -203,7 +211,29 @@ public class GameFragment extends Fragment {
         ed.commit();
     }
 
+    void randomRace() {
+        int randomDistance = ThreadLocalRandom.current().nextInt(1, 5);
+        distance = randomDistance * 100;
+        sPref = getActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putInt("DISTANCE", distance);
+        jumpsAmount = -2;
+        for (int i = 0; i <= distance; i += 100) {
+            int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
+            if (randomNum == 1 || i == 0 || i == distance) {
+                ed.putBoolean("JUMP" + String.valueOf(i), true);
+                jumpsAmount++;
+            } else {
+                ed.putBoolean("JUMP" + String.valueOf(i), false);
+            }
+        }
+        ed.commit();
+    }
+
     void updateStats() {
+        tvAvailablePoints.setText("Stat Points " + String.valueOf(availablePoints));
+        tvDistance.setText(String.valueOf(distance) + " m");
+        tvJumpsAmount.setText(String.valueOf(jumpsAmount) + " jumps");
         tvSpeed.setText(String.valueOf(players.get(0).getSpeed()));
         tvStamina.setText(String.valueOf(players.get(0).getStamina()));
         tvAgility.setText(String.valueOf(players.get(0).getAgility()));

@@ -54,7 +54,6 @@ public class RaceFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_race, container, false);
         Log.e("MY", "Fragment");
         loadStats();
-        setRace();
         race = new Race(getActivity(), this, racers, distance, jumps);
 
         timeLeft = 4;
@@ -63,19 +62,6 @@ public class RaceFragment extends Fragment {
         timer.schedule(timerTask, 0, 1000);
 
         return race;
-    }
-
-    void setRace() {
-        distance = 200;
-        jumps.clear();
-        for (int i = 0; i <= distance; i += 100) {
-            int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
-            if (randomNum == 1 || i == 0 || i == distance) {
-                jumps.add(true);
-            } else {
-                jumps.add(false);
-            }
-        }
     }
 
     void loadStats() {
@@ -96,15 +82,18 @@ public class RaceFragment extends Fragment {
         int playersAmount = sPref.getInt("PLAYERS_AMOUNT", 1);
         racers = new ArrayList<>();
         for (int i = 0; i < playersAmount; i++) {
+            String name = sPref.getString("NAME" + String.valueOf(i), "Noname");
             int speedPoints = sPref.getInt("SPEED_POINTS" + String.valueOf(i), 1);
             int staminaPoints = sPref.getInt("STAMINA_POINTS" + String.valueOf(i), 1);
             int agilityPoints = sPref.getInt("AGILITY_POINTS" + String.valueOf(i), 1);
             int reactionPoints = sPref.getInt("REACTION_POINTS" + String.valueOf(i), 1);
-            racers.add(new Racer(speedPoints, staminaPoints, agilityPoints, reactionPoints, 300 + i * 100));
+            racers.add(new Racer(name, speedPoints, staminaPoints, agilityPoints, reactionPoints, 300 + i * 100));
         }
-
-
-
+        distance = sPref.getInt("DISTANCE", 100);
+        jumps.clear();
+        for (int i = 0; i <= distance; i += 100) {
+            jumps.add(sPref.getBoolean("JUMP" + String.valueOf(i), false));
+        }
     }
 
     class MyTimeTask extends TimerTask {

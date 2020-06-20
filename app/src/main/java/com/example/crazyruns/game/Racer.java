@@ -13,8 +13,8 @@ public class Racer extends Player {
     private final float borderX = 100;
     private final float jumpHigh = 25;
 
-    public Racer(int speed, int stamina, int agility, int reaction, float posY) {
-        super(speed, stamina, agility, reaction);
+    public Racer(String name, int speed, int stamina, int agility, int reaction, float posY) {
+        super(name, speed, stamina, agility, reaction);
         this.posY = posY;
         this.mainPosY = posY;
         this.posX = 75;

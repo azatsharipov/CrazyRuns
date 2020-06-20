@@ -9,12 +9,12 @@ public class Player {
     protected int points;
     protected int listNumber;
 
-    public Player(int speed, int stamina, int agility, int reaction) {
+    public Player(String name, int speed, int stamina, int agility, int reaction) {
         this.speed = speed;
         this.stamina = stamina;
         this.agility = agility;
         this.reaction = reaction;
-        name = "Some Name " + String.valueOf(this.speed);
+        this.name = name;
         points = 0;
     }
 

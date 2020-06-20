@@ -149,6 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -189,8 +190,24 @@
             android:id="@+id/rv_players"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:listitem="@layout/racer_item"/>
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/border_margin"
+            android:text="100m"
+            android:textSize="@dimen/common_text"/>
+
+        <TextView
+            android:id="@+id/tv_jumps_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/border_margin"
+            android:text="2 jumps"
+            android:textSize="@dimen/common_text"/>
     </LinearLayout>
 
 </LinearLayout>
