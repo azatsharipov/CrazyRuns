@@ -80,7 +80,6 @@ public class GameFragment extends Fragment {
         players.add(new Player("4", 200, 200, 200, 400));
         loadData();
 
-        randomRace();
         updateStats();
 
         Bundle bundle = getArguments();
@@ -101,6 +100,7 @@ public class GameFragment extends Fragment {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
                 if (points != -1) {
 //                    players.get(i).setPoints(points);
+                    randomRace();
                     players.get(i).setPoints(players.get(i).getPoints() + points);
                 }
 
@@ -193,6 +193,16 @@ public class GameFragment extends Fragment {
             int reactionPoints = sPref.getInt("REACTION_POINTS" + String.valueOf(i), 1);
             if (reactionPoints != 1)
                 players.get(i).setReaction(reactionPoints);
+        }
+        if (sPref.getInt("DISTANCE", -1) == -1)
+            randomRace();
+        else {
+            distance = sPref.getInt("DISTANCE", -1);
+            jumpsAmount = -2;
+            for (int i = 0; i <= distance; i += 100) {
+                if (sPref.getBoolean("JUMP" + String.valueOf(i), false))
+                    jumpsAmount++;
+            }
         }
     }
 
