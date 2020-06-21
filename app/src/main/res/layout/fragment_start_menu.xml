@@ -8,11 +8,20 @@
 
     <Button
         android:id="@+id/bt_start"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/menu_bt_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
         android:text="@string/start"
-        android:textSize="20sp" />
+        android:textSize="@dimen/common_text" />
+
+    <Button
+        android:id="@+id/bt_multiplayer"
+        android:layout_width="@dimen/menu_bt_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:text="Multiplayer"
+        android:textSize="@dimen/common_text"/>
 
 </LinearLayout>

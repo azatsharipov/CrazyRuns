@@ -12,6 +12,7 @@ public class Racer extends Player {
     private int jump;
     private final float borderX = 100;
     private final float jumpHigh = 25;
+    private float time;
 
     public Racer(String name, int speed, int stamina, int agility, int reaction, float posY) {
         super(name, speed, stamina, agility, reaction);
@@ -22,6 +23,7 @@ public class Racer extends Player {
         currentSpeed = 0;
         maxSpeed = 1;
         potentialMaxSpeed = maxSpeed;
+        time = 0;
     }
 
     public void move(ArrayList<Boolean> jumps, float raceTime) {
@@ -74,5 +76,13 @@ public class Racer extends Player {
 
     public void setPosY(float posY) {
         this.posY = posY;
+    }
+
+    public float getTime() {
+        return time;
+    }
+
+    public void setTime(float time) {
+        this.time = time;
     }
 }

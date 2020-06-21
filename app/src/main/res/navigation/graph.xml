@@ -48,4 +48,14 @@
         android:name="com.example.crazyruns.game.AgilityFragment"
         android:label="fragment_agility"
         tools:layout="@layout/fragment_agility" />
+    <fragment
+        android:id="@+id/raceResultFragment"
+        android:name="com.example.crazyruns.game.RaceResultFragment"
+        android:label="fragment_race_result"
+        tools:layout="@layout/fragment_race_result" />
+    <fragment
+        android:id="@+id/waitingOponentsFragment"
+        android:name="com.example.crazyruns.game.WaitingOponentsFragment"
+        android:label="fragment_waiting_oponents"
+        tools:layout="@layout/fragment_waiting_oponents" />
 </navigation>

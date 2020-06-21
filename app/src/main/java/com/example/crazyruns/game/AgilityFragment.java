@@ -225,7 +225,7 @@ public class AgilityFragment extends Fragment {
     private void gameOver () {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Bundle bundle = new Bundle();
-        bundle.putInt("AGILITY_POINTS", points);
+        bundle.putInt("AGILITY_POINTS", points * 2);
         navController.popBackStack();
         navController.navigate(R.id.gameFragment, bundle);
     }

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.crazyruns.R;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -87,7 +88,7 @@ public class RaceFragment extends Fragment {
             int staminaPoints = sPref.getInt("STAMINA_POINTS" + String.valueOf(i), 1);
             int agilityPoints = sPref.getInt("AGILITY_POINTS" + String.valueOf(i), 1);
             int reactionPoints = sPref.getInt("REACTION_POINTS" + String.valueOf(i), 1);
-            racers.add(new Racer(name, speedPoints, staminaPoints, agilityPoints, reactionPoints, 300 + i * 100));
+            racers.add(new Racer(name, speedPoints, staminaPoints, agilityPoints, reactionPoints, 200 + i * 100));
         }
         distance = sPref.getInt("DISTANCE", 100);
         jumps.clear();
@@ -112,10 +113,12 @@ public class RaceFragment extends Fragment {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         navController.popBackStack();
         ArrayList<Integer> places = race.getPlaces();
+        ArrayList<Float> times = race.getTimes();
         Bundle bundle = new Bundle();
         for (int i = 0; i < places.size(); i++) {
             bundle.putInt("POINTS" + String.valueOf(places.get(i)), 10 - i);
+            bundle.putFloat("TIME" + String.valueOf(places.get(i)), times.get(i));
         }
-        navController.navigate(R.id.gameFragment, bundle);
+        navController.navigate(R.id.raceResultFragment, bundle);
     }
 }

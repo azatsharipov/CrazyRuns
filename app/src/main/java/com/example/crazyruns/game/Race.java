@@ -10,7 +10,9 @@ import android.view.View;
 
 import com.example.crazyruns.R;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Race extends View implements Runnable {
     final float FPS = 60;
@@ -23,6 +25,7 @@ public class Race extends View implements Runnable {
     ArrayList<Racer> racers;
     ArrayList<Integer> colors;
     ArrayList<Integer> places;
+    ArrayList<Float> times;
     ArrayList<Boolean> jumps;
     Paint paint = null;
     boolean isRunning;
@@ -42,7 +45,9 @@ public class Race extends View implements Runnable {
         colors.add(Color.RED);
         colors.add(Color.GREEN);
         colors.add(Color.YELLOW);
+        colors.add(Color.rgb(255, 127, 80));
         places = new ArrayList<>();
+        times = new ArrayList<>();
         this.jumps = jumps;
         this.distance = distance;
     }
@@ -99,11 +104,11 @@ public class Race extends View implements Runnable {
         paint.setColor(Color.BLACK);
         float textSize = 30;
         paint.setTextSize(textSize);
-        float topLine = 250;
+        float topLine = 150;
         for (int i = 0; i <= distance; i += 100) {
-            canvas.drawText(String.valueOf(i) + "m", 50 + i, 225, paint);
+            canvas.drawText(String.valueOf(i) + "m", 50 + i, 125, paint);
             if (jumps.get(i / 100)) {
-                canvas.drawLine(100 + i, 250, 100 + i, 250 + racers.size() * 100, paint);
+                canvas.drawLine(100 + i, topLine, 100 + i, topLine + racers.size() * 100, paint);
             }
         }
         for (int i = 0; i <= racers.size(); i++) {
@@ -136,13 +141,19 @@ public class Race extends View implements Runnable {
                 delta--;
             }
             isGameOver = true;
+            ArrayList<Integer> toPlaces = new ArrayList<>();
             for (int i = 0; i < racers.size(); i++) {
                 Racer racer = racers.get(i);
                 if (racer.getPosX() <= distance + 100) {
                     isGameOver = false;
                 } else if (!places.contains(i)) {
-                    places.add(i);
+                    toPlaces.add(i);
                 }
+            }
+            Collections.shuffle(toPlaces);
+            for (int i = 0; i < toPlaces.size(); i++) {
+                places.add(toPlaces.get(i));
+                times.add(raceTime * UPDATE_TIME / SECOND + (float)i / 100);
             }
             if (isGameOver)
                 stopGame();
@@ -151,6 +162,10 @@ public class Race extends View implements Runnable {
 
     public ArrayList<Integer> getPlaces() {
         return places;
+    }
+
+    public ArrayList<Float> getTimes() {
+        return times;
     }
 
     private void updateGame() {

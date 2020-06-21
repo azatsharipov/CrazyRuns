@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/border_margin"
+    tools:context=".game.WaitingOponentsFragment">
+
+    <TextView
+        android:id="@+id/tv_waiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_text"
+        android:layout_centerInParent="true"
+        android:text="Waiting for oponents" />
+
+    <TextView
+        android:id="@+id/tv_waiting_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_text"
+        android:text="1/5"
+        android:layout_below="@+id/tv_waiting"
+        android:layout_centerHorizontal="true"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_waiting_number"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

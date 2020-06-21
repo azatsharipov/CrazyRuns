@@ -19,6 +19,7 @@ import com.example.crazyruns.R;
  */
 public class StartMenuFragment extends Fragment {
     private Button btStart;
+    private Button btMultiplayer;
 
     public StartMenuFragment() {
         // Required empty public constructor
@@ -36,6 +37,15 @@ public class StartMenuFragment extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                 navController.popBackStack();
                 navController.navigate(R.id.gameFragment);
+            }
+        });
+        btMultiplayer = root.findViewById(R.id.bt_multiplayer);
+        btMultiplayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.popBackStack();
+                navController.navigate(R.id.waitingOponentsFragment);
             }
         });
         return root;

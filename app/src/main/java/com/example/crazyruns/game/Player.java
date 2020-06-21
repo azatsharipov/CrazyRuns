@@ -69,4 +69,8 @@ public class Player {
     public void setListNumber(int listNumber) {
         this.listNumber = listNumber;
     }
+
+    public int getPower() {
+        return speed + stamina + agility + reaction;
+    }
 }

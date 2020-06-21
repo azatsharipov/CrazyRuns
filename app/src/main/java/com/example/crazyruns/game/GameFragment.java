@@ -40,6 +40,7 @@ public class GameFragment extends Fragment {
     private TextView tvAvailablePoints;
     private TextView tvDistance;
     private TextView tvJumpsAmount;
+    private TextView tvRaceNumber;
     private Button btRace;
     private ArrayList<Player> players;
     private RecyclerView recyclerView;
@@ -47,6 +48,7 @@ public class GameFragment extends Fragment {
     private int availablePoints = 2;
     private int distance;
     private int jumpsAmount;
+    private int raceNumber;
     private SharedPreferences sPref;
 
     public GameFragment() {
@@ -69,15 +71,15 @@ public class GameFragment extends Fragment {
         tvAvailablePoints = root.findViewById(R.id.tv_available_points);
         tvDistance = root.findViewById(R.id.tv_distance);
         tvJumpsAmount = root.findViewById(R.id.tv_jumps_amount);
+        tvRaceNumber = root.findViewById(R.id.tv_race_number);
         btRace = root.findViewById(R.id.bt_race);
 
-        tvAvailablePoints.setText("Points: " + String.valueOf(availablePoints));
-
         players = new ArrayList<>();
-        players.add(new Player("I", 400, 200, 200, 200));
-        players.add(new Player("2", 200, 400, 200, 200));
-        players.add(new Player("3", 200, 200, 400, 200));
-        players.add(new Player("4", 200, 200, 200, 400));
+        players.add(new Player("I", 200, 200, 200, 200));
+        players.add(new Player("2", 200, 200, 200, 200));
+        players.add(new Player("3", 200, 200, 200, 200));
+        players.add(new Player("4", 200, 200, 200, 200));
+        players.add(new Player("5", 200, 200, 200, 200));
         loadData();
 
         updateStats();
@@ -96,14 +98,22 @@ public class GameFragment extends Fragment {
             points = bundle.getInt("REACTION_POINTS", 1);
             if (points != 1)
                 players.get(0).setReaction(players.get(0).getReaction() + points);
+            boolean wasAdded = false;
             for (int i = 0; i < 10; i++) {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
                 if (points != -1) {
 //                    players.get(i).setPoints(points);
-                    randomRace();
+                    wasAdded = true;
                     players.get(i).setPoints(players.get(i).getPoints() + points);
                 }
-
+            }
+            if (wasAdded) {
+                raceNumber++;
+                if (raceNumber < 11) {
+                    randomRace();
+                    availablePoints = 2;
+                    upgradeBots();
+                }
             }
             updateStats();
         }
@@ -122,44 +132,52 @@ public class GameFragment extends Fragment {
         btSpeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                availablePoints--;
-                saveData();
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.popBackStack();
-                navController.navigate(R.id.speedFragment);
+                if (availablePoints > 0) {
+                    availablePoints--;
+                    saveData();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.speedFragment);
+                }
             }
         });
 
         btStamina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                availablePoints--;
-                saveData();
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.popBackStack();
-                navController.navigate(R.id.staminaFragment);
+                if (availablePoints > 0) {
+                    availablePoints--;
+                    saveData();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.staminaFragment);
+                }
             }
         });
 
         btAgility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                availablePoints--;
-                saveData();
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.popBackStack();
-                navController.navigate(R.id.agilityFragment);
+                if (availablePoints > 0) {
+                    availablePoints--;
+                    saveData();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.agilityFragment);
+                }
             }
         });
 
         btReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                availablePoints--;
-                saveData();
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.popBackStack();
-                navController.navigate(R.id.reactionFragment);
+                if (availablePoints > 0) {
+                    availablePoints--;
+                    saveData();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.reactionFragment);
+                }
             }
         });
 
@@ -194,9 +212,12 @@ public class GameFragment extends Fragment {
             if (reactionPoints != 1)
                 players.get(i).setReaction(reactionPoints);
         }
-        if (sPref.getInt("DISTANCE", -1) == -1)
+        raceNumber = sPref.getInt("RACE_NUMBER", 1);
+        availablePoints = sPref.getInt("AVAILABLE_POINTS", 2);
+        if (sPref.getInt("DISTANCE", -1) == -1) {
             randomRace();
-        else {
+            upgradeBots();
+        } else {
             distance = sPref.getInt("DISTANCE", -1);
             jumpsAmount = -2;
             for (int i = 0; i <= distance; i += 100) {
@@ -209,6 +230,8 @@ public class GameFragment extends Fragment {
     void saveData() {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
+        ed.putInt("RACE_NUMBER", raceNumber);
+        ed.putInt("AVAILABLE_POINTS", availablePoints);
         ed.putInt("PLAYERS_AMOUNT", players.size());
         for (int i = 0; i < players.size(); i++) {
             ed.putInt("POINTS" + String.valueOf(i), players.get(i).getPoints());
@@ -222,7 +245,7 @@ public class GameFragment extends Fragment {
     }
 
     void randomRace() {
-        int randomDistance = ThreadLocalRandom.current().nextInt(1, 5);
+        int randomDistance = ThreadLocalRandom.current().nextInt(1, Math.min(11, 3 + raceNumber));
         distance = randomDistance * 100;
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
@@ -240,7 +263,26 @@ public class GameFragment extends Fragment {
         ed.commit();
     }
 
+    void upgradeBots() {
+        for (int i = 1; i < players.size(); i++) {
+            for (int j = 0; j < 2; j++) {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+                int randomPoints = ThreadLocalRandom.current().nextInt(30, 50);
+                Player player = players.get(i);
+                if (randomNum == 0)
+                    player.setSpeed(player.getSpeed() + randomPoints);
+                else if (randomNum == 1)
+                    player.setStamina(player.getStamina() + randomPoints);
+                else if (randomNum == 2)
+                    player.setAgility(player.getAgility() + randomPoints);
+                else
+                    player.setReaction(player.getReaction() + randomPoints);
+            }
+        }
+    }
+
     void updateStats() {
+        tvRaceNumber.setText("Race number " + String.valueOf(raceNumber));
         tvAvailablePoints.setText("Stat Points " + String.valueOf(availablePoints));
         tvDistance.setText(String.valueOf(distance) + " m");
         tvJumpsAmount.setText(String.valueOf(jumpsAmount) + " jumps");
@@ -248,6 +290,25 @@ public class GameFragment extends Fragment {
         tvStamina.setText(String.valueOf(players.get(0).getStamina()));
         tvAgility.setText(String.valueOf(players.get(0).getAgility()));
         tvReaction.setText(String.valueOf(players.get(0).getReaction()));
+        if (raceNumber >= 11) {
+            btSpeed.setVisibility(View.INVISIBLE);
+            btStamina.setVisibility(View.INVISIBLE);
+            btAgility.setVisibility(View.INVISIBLE);
+            btReaction.setVisibility(View.INVISIBLE);
+            tvDistance.setVisibility(View.INVISIBLE);
+            tvJumpsAmount.setVisibility(View.INVISIBLE);
+            tvAvailablePoints.setVisibility(View.INVISIBLE);
+            tvRaceNumber.setText("Champ is over");
+            btRace.setText("end game");
+            btRace.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.startMenuFragment);
+                }
+            });
+        }
     }
 
 }

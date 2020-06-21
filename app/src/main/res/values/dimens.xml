@@ -6,4 +6,5 @@
     <dimen name="big_timer">100sp</dimen>
     <dimen name="half_screen_y">100dp</dimen>
     <dimen name="big_text">40sp</dimen>
+    <dimen name="menu_bt_width">200dp</dimen>
 </resources>

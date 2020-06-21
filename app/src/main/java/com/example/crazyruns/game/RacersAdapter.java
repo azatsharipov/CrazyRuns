@@ -39,11 +39,13 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvNumber;
         TextView tvName;
+        TextView tvPower;
         TextView tvPoints;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNumber = itemView.findViewById(R.id.racer_item_number);
             tvName = itemView.findViewById(R.id.racer_item_name);
+            tvPower = itemView.findViewById(R.id.racer_item_power);
             tvPoints = itemView.findViewById(R.id.racer_item_points);
         }
     }
@@ -62,6 +64,7 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
         Player player = players.get(position);
         holder.tvNumber.setText(String.valueOf(player.getListNumber()));
         holder.tvName.setText(player.getName());
+        holder.tvPower.setText(String.valueOf(player.getPower()));
         holder.tvPoints.setText(String.valueOf(player.getPoints()));
     }
 
