@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.crazyruns.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,6 +57,13 @@ public class GameFragment extends Fragment {
     private int raceNumber;
     private SharedPreferences sPref;
 
+    private boolean isMultiplayer = false;
+    private int playerNumber = 0;
+    private String roomNumber;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef;
+
+
     public GameFragment() {
     }
 
@@ -74,12 +87,32 @@ public class GameFragment extends Fragment {
         tvRaceNumber = root.findViewById(R.id.tv_race_number);
         btRace = root.findViewById(R.id.bt_race);
 
-        players = new ArrayList<>();
-        players.add(new Player("I", 200, 200, 200, 200));
-        players.add(new Player("2", 200, 200, 200, 200));
-        players.add(new Player("3", 200, 200, 200, 200));
-        players.add(new Player("4", 200, 200, 200, 200));
-        players.add(new Player("5", 200, 200, 200, 200));
+        SharedPreferences sPref = getActivity().getPreferences(MODE_PRIVATE);
+        isMultiplayer = sPref.getBoolean("MULTIPLAYER", false);
+        playerNumber = sPref.getInt("PLAYER_NUMBER", 0);
+        roomNumber = "1";
+        myRef = database.getReference("rooms").child(roomNumber);
+
+
+//        myRef.setValue("Hello, World!");
+        /*
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                Log.d("MY", "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("MY", "Failed to read value.", error.toException());
+            }
+        });
+        */
+
         loadData();
 
         updateStats();
@@ -88,16 +121,16 @@ public class GameFragment extends Fragment {
         if (bundle != null) {
             int points = bundle.getInt("SPEED_POINTS", 1);
             if (points != 1)
-                players.get(0).setSpeed(players.get(0).getSpeed() + points);
+                players.get(playerNumber).setSpeed(players.get(playerNumber).getSpeed() + points);
             points = bundle.getInt("STAMINA_POINTS", 1);
             if (points != 1)
-                players.get(0).setStamina(players.get(0).getStamina() + points);
+                players.get(playerNumber).setStamina(players.get(playerNumber).getStamina() + points);
             points = bundle.getInt("AGILITY_POINTS", 1);
             if (points != 1)
-                players.get(0).setAgility(players.get(0).getAgility() + points);
+                players.get(playerNumber).setAgility(players.get(playerNumber).getAgility() + points);
             points = bundle.getInt("REACTION_POINTS", 1);
             if (points != 1)
-                players.get(0).setReaction(players.get(0).getReaction() + points);
+                players.get(playerNumber).setReaction(players.get(playerNumber).getReaction() + points);
             boolean wasAdded = false;
             for (int i = 0; i < 10; i++) {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
@@ -184,10 +217,21 @@ public class GameFragment extends Fragment {
         btRace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.popBackStack();
-                navController.navigate(R.id.raceFragment);
+                if (((Button)view).getText().toString().toLowerCase() == "end game") {
+                    btRace.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                            navController.popBackStack();
+                            navController.navigate(R.id.startMenuFragment);
+                        }
+                    });
+                } else {
+                    saveData();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.raceFragment);
+                }
             }
         });
 
@@ -196,7 +240,25 @@ public class GameFragment extends Fragment {
 
     void loadData() {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
+        int playersAmount = sPref.getInt("PLAYERS_AMOUNT", 0);
+        if (playersAmount == 0) {
+            players = new ArrayList<>();
+            players.add(new Player("I", 200, 200, 200, 200));
+            players.add(new Player("2", 200, 200, 200, 200));
+            players.add(new Player("3", 200, 200, 200, 200));
+            players.add(new Player("4", 200, 200, 200, 200));
+            players.add(new Player("5", 200, 200, 200, 200));
+        } else {
+            players = new ArrayList<>();
+            for (int i = 0; i < playersAmount; i++) {
+                String name = sPref.getString("NAME" + String.valueOf(i), "Noname");
+                players.add(new Player(name, 200, 200, 200, 200));
+            }
+        }
         for (int i = 0; i < players.size(); i++) {
+            String name = sPref.getString("NAME" + String.valueOf(i), "Noname");
+            if (name != "Noname")
+                players.get(i).setName(name);
             int points = sPref.getInt("POINTS" + String.valueOf(i), 0);
             players.get(i).setPoints(points);
             int speedPoints = sPref.getInt("SPEED_POINTS" + String.valueOf(i), 1);
@@ -264,19 +326,22 @@ public class GameFragment extends Fragment {
     }
 
     void upgradeBots() {
-        for (int i = 1; i < players.size(); i++) {
-            for (int j = 0; j < 2; j++) {
-                int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
-                int randomPoints = ThreadLocalRandom.current().nextInt(30, 50);
-                Player player = players.get(i);
-                if (randomNum == 0)
-                    player.setSpeed(player.getSpeed() + randomPoints);
-                else if (randomNum == 1)
-                    player.setStamina(player.getStamina() + randomPoints);
-                else if (randomNum == 2)
-                    player.setAgility(player.getAgility() + randomPoints);
-                else
-                    player.setReaction(player.getReaction() + randomPoints);
+        // TODO correct check for multiplayer
+        if (!isMultiplayer) {
+            for (int i = 1; i < players.size(); i++) {
+                for (int j = 0; j < 2; j++) {
+                    int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+                    int randomPoints = ThreadLocalRandom.current().nextInt(40, 60);
+                    Player player = players.get(i);
+                    if (randomNum == 0)
+                        player.setSpeed(player.getSpeed() + randomPoints);
+                    else if (randomNum == 1)
+                        player.setStamina(player.getStamina() + randomPoints);
+                    else if (randomNum == 2)
+                        player.setAgility(player.getAgility() + randomPoints);
+                    else
+                        player.setReaction(player.getReaction() + randomPoints);
+                }
             }
         }
     }
@@ -286,10 +351,10 @@ public class GameFragment extends Fragment {
         tvAvailablePoints.setText("Stat Points " + String.valueOf(availablePoints));
         tvDistance.setText(String.valueOf(distance) + " m");
         tvJumpsAmount.setText(String.valueOf(jumpsAmount) + " jumps");
-        tvSpeed.setText(String.valueOf(players.get(0).getSpeed()));
-        tvStamina.setText(String.valueOf(players.get(0).getStamina()));
-        tvAgility.setText(String.valueOf(players.get(0).getAgility()));
-        tvReaction.setText(String.valueOf(players.get(0).getReaction()));
+        tvSpeed.setText(String.valueOf(players.get(playerNumber).getSpeed()));
+        tvStamina.setText(String.valueOf(players.get(playerNumber).getStamina()));
+        tvAgility.setText(String.valueOf(players.get(playerNumber).getAgility()));
+        tvReaction.setText(String.valueOf(players.get(playerNumber).getReaction()));
         if (raceNumber >= 11) {
             btSpeed.setVisibility(View.INVISIBLE);
             btStamina.setVisibility(View.INVISIBLE);
@@ -300,14 +365,6 @@ public class GameFragment extends Fragment {
             tvAvailablePoints.setVisibility(View.INVISIBLE);
             tvRaceNumber.setText("Champ is over");
             btRace.setText("end game");
-            btRace.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                    navController.popBackStack();
-                    navController.navigate(R.id.startMenuFragment);
-                }
-            });
         }
     }
 

@@ -24,4 +24,13 @@
         android:text="Multiplayer"
         android:textSize="@dimen/common_text"/>
 
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="@dimen/menu_bt_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:hint="enter your name"
+        android:textSize="@dimen/common_text"/>
+
 </LinearLayout>

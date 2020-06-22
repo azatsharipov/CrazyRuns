@@ -27,16 +27,16 @@ public class Racer extends Player {
     }
 
     public void move(ArrayList<Boolean> jumps, float raceTime) {
-        if ((1000f - reaction) / 5 < raceTime) {
+        if ((1000f - reaction) / 4 < raceTime) {
             for (int i = 1; i < jumps.size() - 1; i++) {
                 if (Math.abs((posX - borderX) - (i * 100 - jumpHigh)) < 1 && jumps.get(i)) {
                     jump = 1;
                 }
             }
 //            if (raceTime - (1000f - reaction) / 5 > stamina) // stamina by time
-            if (posX - borderX - jumpHigh > stamina)  // stamina by distance
-                maxSpeed = Math.max(0.1f * speed / 100, maxSpeed - 0.1f);
-            currentSpeed = Math.min(maxSpeed, currentSpeed + (float) speed / 10000);
+            if (posX - borderX > stamina)  // stamina by distance
+                maxSpeed = Math.max(0.1f * (speed + stamina) / 200, maxSpeed - 0.1f);
+            currentSpeed = Math.min(maxSpeed, currentSpeed + (float) speed / 50000);
             if (mainPosY - posY >= jumpHigh)
                 jump = 2;
             if (jump == 1) {
@@ -47,8 +47,10 @@ public class Racer extends Player {
                 float newSpeed = (agility * potentialMaxSpeed) / 1000;
                 posY += newSpeed;
                 posX += newSpeed;
-                if (posY >= mainPosY)
+                if (posY >= mainPosY) {
                     jump = 0;
+                    currentSpeed /= 2;
+                }
             } else
                 posX += currentSpeed;
         }
