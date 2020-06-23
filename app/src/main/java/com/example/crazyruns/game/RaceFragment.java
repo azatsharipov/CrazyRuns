@@ -90,10 +90,11 @@ public class RaceFragment extends Fragment {
             int reactionPoints = sPref.getInt("REACTION_POINTS" + String.valueOf(i), 1);
             racers.add(new Racer(name, speedPoints, staminaPoints, agilityPoints, reactionPoints, 200 + i * 100));
         }
-        distance = sPref.getInt("DISTANCE", 100);
+        int raceNumber = sPref.getInt("RACE_NUMBER", 1);
+        distance = sPref.getInt("DISTANCE" + String.valueOf(raceNumber), 100);
         jumps.clear();
         for (int i = 0; i <= distance; i += 100) {
-            jumps.add(sPref.getBoolean("JUMP" + String.valueOf(i), false));
+            jumps.add(sPref.getBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), false));
         }
     }
 

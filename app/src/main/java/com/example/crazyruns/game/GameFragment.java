@@ -44,18 +44,18 @@ public class GameFragment extends Fragment {
     private TextView tvAgility;
     private TextView tvReaction;
     private TextView tvAvailablePoints;
-    private TextView tvDistance;
-    private TextView tvJumpsAmount;
     private TextView tvRaceNumber;
     private Button btRace;
     private ArrayList<Player> players;
+    private ArrayList<RaceInfo> races = new ArrayList<>();
     private RecyclerView recyclerView;
     private RacersAdapter adapter;
+    private RecyclerView recyclerViewRaces;
+    private RacesInfoAdapter adapterRaces;
     private int availablePoints = 2;
-    private int distance;
-    private int jumpsAmount;
     private int raceNumber;
     private SharedPreferences sPref;
+    SharedPreferences.Editor ed;
 
     private boolean isMultiplayer = false;
     private int playerNumber = 0;
@@ -82,55 +82,108 @@ public class GameFragment extends Fragment {
         tvAgility = root.findViewById(R.id.tv_agility_points);
         tvReaction = root.findViewById(R.id.tv_reaction_points);
         tvAvailablePoints = root.findViewById(R.id.tv_available_points);
-        tvDistance = root.findViewById(R.id.tv_distance);
-        tvJumpsAmount = root.findViewById(R.id.tv_jumps_amount);
         tvRaceNumber = root.findViewById(R.id.tv_race_number);
         btRace = root.findViewById(R.id.bt_race);
 
-        SharedPreferences sPref = getActivity().getPreferences(MODE_PRIVATE);
+        sPref = getActivity().getPreferences(MODE_PRIVATE);
+        ed = sPref.edit();
         isMultiplayer = sPref.getBoolean("MULTIPLAYER", false);
-        playerNumber = sPref.getInt("PLAYER_NUMBER", 0);
-        roomNumber = "1";
-        myRef = database.getReference("rooms").child(roomNumber);
-
-
-//        myRef.setValue("Hello, World!");
-        /*
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("MY", "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("MY", "Failed to read value.", error.toException());
-            }
-        });
-        */
+        if (isMultiplayer) {
+            playerNumber = sPref.getInt("PLAYER_NUMBER", 0);
+            roomNumber = "1";
+            myRef = database.getReference("rooms").child(roomNumber);
+        }
 
         loadData();
+
+        if (isMultiplayer) {
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (int i = 0; i < players.size(); i++) {
+//                        player = dataSnapshot.child("player" + String.valueOf(i)).getValue(Player.class);
+                        Player player = players.get(i);
+                        String name = dataSnapshot.child("player" + String.valueOf(i)).child("name").getValue(String.class);
+                        player.setName(name);
+                        int points = dataSnapshot.child("player" + String.valueOf(i)).child("points").getValue(Integer.class);
+                        player.setPoints(points);
+                        int speedPoints = dataSnapshot.child("player" + String.valueOf(i)).child("speed").getValue(Integer.class);
+                        player.setSpeed(speedPoints);
+                        int staminaPoints = dataSnapshot.child("player" + String.valueOf(i)).child("stamina").getValue(Integer.class);
+                        player.setStamina(staminaPoints);
+                        int agilityPoints = dataSnapshot.child("player" + String.valueOf(i)).child("agility").getValue(Integer.class);
+                        player.setAgility(agilityPoints);
+                        int reactionPoints = dataSnapshot.child("player" + String.valueOf(i)).child("reaction").getValue(Integer.class);
+                        player.setReaction(reactionPoints);
+                        ed.putInt("POINTS" + String.valueOf(i), player.getPoints());
+                        ed.putString("NAME" + String.valueOf(i), player.getName());
+                        ed.putInt("SPEED_POINTS" + String.valueOf(i), player.getSpeed());
+                        ed.putInt("STAMINA_POINTS" + String.valueOf(i), player.getStamina());
+                        ed.putInt("AGILITY_POINTS" + String.valueOf(i), player.getAgility());
+                        ed.putInt("REACTION_POINTS" + String.valueOf(i), player.getReaction());
+                    }
+                    updateStats();
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
+                    // getting races
+                    for (int raceNumber = 1; raceNumber <= 10; raceNumber++) {
+                        int distance = dataSnapshot.child("races").child(String.valueOf(raceNumber))
+                                .child("distance").getValue(Integer.class);
+                        ed.putInt("DISTANCE" + String.valueOf(raceNumber), distance);
+                        int jumpsAmount = -2;
+                        for (int i = 0; i <= distance; i += 100) {
+                            boolean isJump = dataSnapshot.child("races").child(String.valueOf(raceNumber))
+                                    .child("jump").child(String.valueOf(i)).getValue(Boolean.class);
+                            if (isJump) {
+                                jumpsAmount++;
+                            }
+                            ed.putBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), isJump);
+                        }
+                        ed.commit();
+                        races.get(raceNumber - 1).setDistance(distance);
+                        races.get(raceNumber - 1).setJumpsAmount(jumpsAmount);
+//                        races.add(new RaceInfo(raceNumber, distance, jumpsAmount));
+                    }
+                    if (adapterRaces != null)
+                        adapterRaces.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("MY", "Failed to read value.", error.toException());
+                }
+            });
+        }
 
         updateStats();
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             int points = bundle.getInt("SPEED_POINTS", 1);
-            if (points != 1)
+            if (points != 1) {
                 players.get(playerNumber).setSpeed(players.get(playerNumber).getSpeed() + points);
+                if (isMultiplayer)
+                    myRef.child("player" + playerNumber).child("speed").setValue(players.get(playerNumber).getSpeed());
+            }
             points = bundle.getInt("STAMINA_POINTS", 1);
-            if (points != 1)
+            if (points != 1) {
                 players.get(playerNumber).setStamina(players.get(playerNumber).getStamina() + points);
+                if (isMultiplayer)
+                    myRef.child("player" + playerNumber).child("stamina").setValue(players.get(playerNumber).getStamina());
+            }
             points = bundle.getInt("AGILITY_POINTS", 1);
-            if (points != 1)
+            if (points != 1) {
                 players.get(playerNumber).setAgility(players.get(playerNumber).getAgility() + points);
+                if (isMultiplayer)
+                    myRef.child("player" + playerNumber).child("agility").setValue(players.get(playerNumber).getAgility());
+            }
             points = bundle.getInt("REACTION_POINTS", 1);
-            if (points != 1)
+            if (points != 1) {
                 players.get(playerNumber).setReaction(players.get(playerNumber).getReaction() + points);
+                if (isMultiplayer)
+                    myRef.child("player" + playerNumber).child("reaction").setValue(players.get(playerNumber).getReaction());
+            }
             boolean wasAdded = false;
             for (int i = 0; i < 10; i++) {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
@@ -138,12 +191,13 @@ public class GameFragment extends Fragment {
 //                    players.get(i).setPoints(points);
                     wasAdded = true;
                     players.get(i).setPoints(players.get(i).getPoints() + points);
+                    if (isMultiplayer)
+                        myRef.child("player" + playerNumber).child("points").setValue(players.get(playerNumber).getPoints());
                 }
             }
             if (wasAdded) {
                 raceNumber++;
                 if (raceNumber < 11) {
-                    randomRace();
                     availablePoints = 2;
                     upgradeBots();
                 }
@@ -158,9 +212,17 @@ public class GameFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 LinearLayout.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-
         adapter = new RacersAdapter(players);
         recyclerView.setAdapter(adapter);
+
+        recyclerViewRaces = root.findViewById(R.id.rv_races_info);
+        RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
+        recyclerViewRaces.setLayoutManager(layoutManager2);
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerViewRaces.getContext(),
+                LinearLayout.VERTICAL);
+        recyclerViewRaces.addItemDecoration(dividerItemDecoration2);
+        adapterRaces = new RacesInfoAdapter(races);
+        recyclerViewRaces.setAdapter(adapterRaces);
 
         btSpeed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +301,6 @@ public class GameFragment extends Fragment {
     }
 
     void loadData() {
-        sPref = getActivity().getPreferences(MODE_PRIVATE);
         int playersAmount = sPref.getInt("PLAYERS_AMOUNT", 0);
         if (playersAmount == 0) {
             players = new ArrayList<>();
@@ -276,22 +337,35 @@ public class GameFragment extends Fragment {
         }
         raceNumber = sPref.getInt("RACE_NUMBER", 1);
         availablePoints = sPref.getInt("AVAILABLE_POINTS", 2);
-        if (sPref.getInt("DISTANCE", -1) == -1) {
-            randomRace();
-            upgradeBots();
+        if (sPref.getInt("DISTANCE" + String.valueOf(raceNumber), -1) == -1) {
+            if (!isMultiplayer) {
+                randomRaces();
+                upgradeBots();
+            } else {
+                races = new ArrayList<>();
+                for (int raceNumber = 1; raceNumber <= 10; raceNumber++) {
+                    races.add(new RaceInfo(raceNumber, 0, 0));
+                }
+            }
+//        } else if (!isMultiplayer) {
+            // tmp for multiplayer
         } else {
-            distance = sPref.getInt("DISTANCE", -1);
-            jumpsAmount = -2;
-            for (int i = 0; i <= distance; i += 100) {
-                if (sPref.getBoolean("JUMP" + String.valueOf(i), false))
-                    jumpsAmount++;
+            races = new ArrayList<>();
+            for (int raceNumber = 1; raceNumber <= 10; raceNumber++) {
+                int distance = sPref.getInt("DISTANCE" + String.valueOf(raceNumber), 100);
+                int jumpsAmount = -2;
+                for (int i = 0; i <= distance; i += 100) {
+                    boolean isJump = sPref.getBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), false);
+                    if (isJump) {
+                        jumpsAmount++;
+                    }
+                }
+                races.add(new RaceInfo(raceNumber, distance, jumpsAmount));
             }
         }
     }
 
     void saveData() {
-        sPref = getActivity().getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
         ed.putInt("RACE_NUMBER", raceNumber);
         ed.putInt("AVAILABLE_POINTS", availablePoints);
         ed.putInt("PLAYERS_AMOUNT", players.size());
@@ -306,23 +380,25 @@ public class GameFragment extends Fragment {
         ed.commit();
     }
 
-    void randomRace() {
-        int randomDistance = ThreadLocalRandom.current().nextInt(1, Math.min(11, 3 + raceNumber));
-        distance = randomDistance * 100;
-        sPref = getActivity().getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putInt("DISTANCE", distance);
-        jumpsAmount = -2;
-        for (int i = 0; i <= distance; i += 100) {
-            int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
-            if (randomNum == 1 || i == 0 || i == distance) {
-                ed.putBoolean("JUMP" + String.valueOf(i), true);
-                jumpsAmount++;
-            } else {
-                ed.putBoolean("JUMP" + String.valueOf(i), false);
+    void randomRaces() {
+        races = new ArrayList<>();
+        for (int raceNumber = 1; raceNumber <= 10; raceNumber++) {
+            int randomDistance = ThreadLocalRandom.current().nextInt(1, Math.min(11, 3 + raceNumber));
+            int distance = randomDistance * 100;
+            ed.putInt("DISTANCE" + String.valueOf(raceNumber), distance);
+            int jumpsAmount = -2;
+            for (int i = 0; i <= distance; i += 100) {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
+                if (randomNum == 1 || i == 0 || i == distance) {
+                    ed.putBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), true);
+                    jumpsAmount++;
+                } else {
+                    ed.putBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), false);
+                }
             }
+            ed.commit();
+            races.add(new RaceInfo(raceNumber, distance, jumpsAmount));
         }
-        ed.commit();
     }
 
     void upgradeBots() {
@@ -349,8 +425,6 @@ public class GameFragment extends Fragment {
     void updateStats() {
         tvRaceNumber.setText("Race number " + String.valueOf(raceNumber));
         tvAvailablePoints.setText("Stat Points " + String.valueOf(availablePoints));
-        tvDistance.setText(String.valueOf(distance) + " m");
-        tvJumpsAmount.setText(String.valueOf(jumpsAmount) + " jumps");
         tvSpeed.setText(String.valueOf(players.get(playerNumber).getSpeed()));
         tvStamina.setText(String.valueOf(players.get(playerNumber).getStamina()));
         tvAgility.setText(String.valueOf(players.get(playerNumber).getAgility()));
@@ -360,8 +434,6 @@ public class GameFragment extends Fragment {
             btStamina.setVisibility(View.INVISIBLE);
             btAgility.setVisibility(View.INVISIBLE);
             btReaction.setVisibility(View.INVISIBLE);
-            tvDistance.setVisibility(View.INVISIBLE);
-            tvJumpsAmount.setVisibility(View.INVISIBLE);
             tvAvailablePoints.setVisibility(View.INVISIBLE);
             tvRaceNumber.setText("Champ is over");
             btRace.setText("end game");

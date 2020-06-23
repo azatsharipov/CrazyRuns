@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -36,6 +38,7 @@ public class WaitingOponentsFragment extends Fragment {
     SharedPreferences.Editor ed;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
+    ValueEventListener listener;
 
 
     public WaitingOponentsFragment() {
@@ -53,7 +56,7 @@ public class WaitingOponentsFragment extends Fragment {
         playersAmount = 0;
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         ed = sPref.edit();
-        myRef.addValueEventListener(new ValueEventListener() {
+        listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -68,6 +71,9 @@ public class WaitingOponentsFragment extends Fragment {
                     myRef.child("player" + String.valueOf(playerNumber)).setValue(player);
                     ed.putInt("PLAYER_NUMBER", playerNumber);
                     ed.commit();
+                    if (playerNumber == 0) {
+                        randomRaces();
+                    }
                 }
                 if (playersAmount == 2) {
                     ed.putInt("PLAYERS_AMOUNT", playersAmount);
@@ -87,17 +93,41 @@ public class WaitingOponentsFragment extends Fragment {
                     goToGame();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w("MY", "Failed to read value.", error.toException());
             }
-        });
+        };
+        myRef.addValueEventListener(listener);
 
 
         return root;
     }
+
+    void randomRaces() {
+        for (int raceNumber = 1; raceNumber <= 10; raceNumber++) {
+            int randomDistance = ThreadLocalRandom.current().nextInt(1, Math.min(11, 3 + raceNumber));
+            int distance = randomDistance * 100;
+            DatabaseReference racesRef = myRef.child("races").child(String.valueOf(raceNumber));
+            racesRef.child("distance").setValue(distance);
+//            ed.putInt("DISTANCE" + String.valueOf(raceNumber), distance);
+            int jumpsAmount = -2;
+            for (int i = 0; i <= distance; i += 100) {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
+                if (randomNum == 1 || i == 0 || i == distance) {
+                    racesRef.child("jump").child(String.valueOf(i)).setValue(true);
+//                    ed.putBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), true);
+                    jumpsAmount++;
+                } else {
+                    racesRef.child("jump").child(String.valueOf(i)).setValue(false);
+//                    ed.putBoolean("JUMP" + String.valueOf(raceNumber) + String.valueOf(i), false);
+                }
+            }
+            ed.commit();
+        }
+    }
+
 
     void goToGame() {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
@@ -106,8 +136,8 @@ public class WaitingOponentsFragment extends Fragment {
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("MULTIPLAYER", true);
         ed.commit();
-
         navController.navigate(R.id.gameFragment);
+        myRef.removeEventListener(listener);
     }
 
 }

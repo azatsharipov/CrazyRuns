@@ -61,10 +61,10 @@ public class AgilityFragment extends Fragment {
             @Override
             public void onSwipeTop() {
                 if (waiting == 0) {
-                    points++;
+                    points += 2;
                     setData();
                 } else {
-                    points--;
+                    points -= 3;
                     if (points < 0)
                         points = 0;
                 }
@@ -73,10 +73,10 @@ public class AgilityFragment extends Fragment {
             @Override
             public void onSwipeRight() {
                 if (waiting == 1) {
-                    points++;
+                    points += 2;
                     setData();
                 } else {
-                    points--;
+                    points -= 3;
                     if (points < 0)
                         points = 0;
                 }
@@ -85,10 +85,10 @@ public class AgilityFragment extends Fragment {
             @Override
             public void onSwipeBottom() {
                 if (waiting == 2) {
-                    points++;
+                    points += 2;
                     setData();
                 } else {
-                    points--;
+                    points -= 3;
                     if (points < 0)
                         points = 0;
                 }
@@ -97,10 +97,10 @@ public class AgilityFragment extends Fragment {
             @Override
             public void onSwipeLeft() {
                 if (waiting == 3) {
-                    points++;
+                    points += 2;
                     setData();
                 } else {
-                    points--;
+                    points -= 3;
                     if (points < 0)
                         points = 0;
                 }
@@ -225,7 +225,7 @@ public class AgilityFragment extends Fragment {
     private void gameOver () {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Bundle bundle = new Bundle();
-        bundle.putInt("AGILITY_POINTS", points * 2);
+        bundle.putInt("AGILITY_POINTS", points);
         navController.popBackStack();
         navController.navigate(R.id.gameFragment, bundle);
     }

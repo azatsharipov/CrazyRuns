@@ -50,9 +50,10 @@ public class ReactionFragment extends Fragment {
             public void onClick(View view) {
                 if (points == -1) {
                     view.setBackgroundColor(Color.GREEN);
-                    tvTouch.setText(R.string.touched);
-                    tvTouch.setText(tvTouch.getText() + " " + String.valueOf(round(timeLeft, 2)));
                     points = Math.max(0, (300 - Math.round(Math.abs(timeLeft) * 100)) / 6);
+                    tvTouch.setText(R.string.touched);
+                    tvTouch.setText(tvTouch.getText() + " " + String.valueOf(round(timeLeft, 2)) +
+                            "(" + String.valueOf(points) + " points)");
                 }
             }
         });

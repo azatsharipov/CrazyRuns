@@ -61,10 +61,10 @@ public class StaminaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (waiting == 0) {
-                    points++;
+                    points += 4;
                     setData();
                 } else {
-                    points--;
+                    points -= 5;
                     if (points < 0)
                         points = 0;
                 }
@@ -75,10 +75,10 @@ public class StaminaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (waiting == 1) {
-                    points++;
+                    points += 4;
                     setData();
                 } else {
-                    points--;
+                    points -= 5;
                     if (points < 0)
                         points = 0;
                 }
@@ -89,10 +89,10 @@ public class StaminaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (waiting == 2) {
-                    points++;
+                    points += 4;
                     setData();
                 } else {
-                    points--;
+                    points -= 5;
                     if (points < 0)
                         points = 0;
                 }
@@ -103,10 +103,10 @@ public class StaminaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (waiting == 3) {
-                    points++;
+                    points += 4;
                     setData();
                 } else {
-                    points--;
+                    points -= 5;
                     if (points < 0)
                         points = 0;
                 }
@@ -148,7 +148,7 @@ public class StaminaFragment extends Fragment {
     private void gameOver () {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Bundle bundle = new Bundle();
-        bundle.putInt("STAMINA_POINTS", points * 4);
+        bundle.putInt("STAMINA_POINTS", points);
         navController.popBackStack();
         navController.navigate(R.id.gameFragment, bundle);
     }
