@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,6 @@ public class GameFragment extends Fragment {
     private RacersAdapter adapter;
     private RecyclerView recyclerViewRaces;
     private RacesInfoAdapter adapterRaces;
-    private int availablePoints = 2;
     private int raceNumber;
     private SharedPreferences sPref;
     SharedPreferences.Editor ed;
@@ -115,12 +115,15 @@ public class GameFragment extends Fragment {
                         player.setAgility(agilityPoints);
                         int reactionPoints = dataSnapshot.child("player" + String.valueOf(i)).child("reaction").getValue(Integer.class);
                         player.setReaction(reactionPoints);
+                        int availablePoints = dataSnapshot.child("player" + String.valueOf(i)).child("availablePoints").getValue(Integer.class);
+                        player.setAvailablePoints(availablePoints);
                         ed.putInt("POINTS" + String.valueOf(i), player.getPoints());
                         ed.putString("NAME" + String.valueOf(i), player.getName());
                         ed.putInt("SPEED_POINTS" + String.valueOf(i), player.getSpeed());
                         ed.putInt("STAMINA_POINTS" + String.valueOf(i), player.getStamina());
                         ed.putInt("AGILITY_POINTS" + String.valueOf(i), player.getAgility());
                         ed.putInt("REACTION_POINTS" + String.valueOf(i), player.getReaction());
+                        ed.putInt("AVAILABLE_POINTS" + String.valueOf(i), player.getAvailablePoints());
                     }
                     updateStats();
                     if (adapter != null)
@@ -146,6 +149,33 @@ public class GameFragment extends Fragment {
                     }
                     if (adapterRaces != null)
                         adapterRaces.notifyDataSetChanged();
+                    int allAvailablePoint = 0;
+                    for (int i = 0; i < players.size(); i++) {
+                        allAvailablePoint += players.get(i).getAvailablePoints();
+                    }
+                    /*
+                    if (allAvailablePoint == 0) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        players.get(playerNumber).setAvailablePoints(2);
+                                        myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                                        btRace.callOnClick();
+                                    }
+                                });
+                            }
+                        }, 1000);
+                        /*
+                        saveData();
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                        navController.popBackStack();
+                        navController.navigate(R.id.raceFragment);
+
+                    }
+                         */
                 }
 
                 @Override
@@ -163,42 +193,52 @@ public class GameFragment extends Fragment {
             int points = bundle.getInt("SPEED_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setSpeed(players.get(playerNumber).getSpeed() + points);
-                if (isMultiplayer)
+                if (isMultiplayer) {
                     myRef.child("player" + playerNumber).child("speed").setValue(players.get(playerNumber).getSpeed());
+                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                }
             }
             points = bundle.getInt("STAMINA_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setStamina(players.get(playerNumber).getStamina() + points);
-                if (isMultiplayer)
+                if (isMultiplayer) {
                     myRef.child("player" + playerNumber).child("stamina").setValue(players.get(playerNumber).getStamina());
+                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                }
             }
             points = bundle.getInt("AGILITY_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setAgility(players.get(playerNumber).getAgility() + points);
-                if (isMultiplayer)
+                if (isMultiplayer) {
                     myRef.child("player" + playerNumber).child("agility").setValue(players.get(playerNumber).getAgility());
+                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                }
             }
             points = bundle.getInt("REACTION_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setReaction(players.get(playerNumber).getReaction() + points);
-                if (isMultiplayer)
+                if (isMultiplayer) {
                     myRef.child("player" + playerNumber).child("reaction").setValue(players.get(playerNumber).getReaction());
+                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                }
             }
             boolean wasAdded = false;
             for (int i = 0; i < 10; i++) {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
                 if (points != -1) {
-//                    players.get(i).setPoints(points);
                     wasAdded = true;
                     players.get(i).setPoints(players.get(i).getPoints() + points);
-                    if (isMultiplayer)
+                    if (isMultiplayer) {
                         myRef.child("player" + playerNumber).child("points").setValue(players.get(playerNumber).getPoints());
+                    }
                 }
             }
             if (wasAdded) {
                 raceNumber++;
+                players.get(playerNumber).setAvailablePoints(2);
+                if (isMultiplayer)
+                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
                 if (raceNumber < 11) {
-                    availablePoints = 2;
                     upgradeBots();
                 }
             }
@@ -227,8 +267,8 @@ public class GameFragment extends Fragment {
         btSpeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (availablePoints > 0) {
-                    availablePoints--;
+                if (players.get(playerNumber).getAvailablePoints() > 0) {
+                    players.get(playerNumber).setAvailablePoints(players.get(playerNumber).getAvailablePoints() - 1);
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     navController.popBackStack();
@@ -240,8 +280,8 @@ public class GameFragment extends Fragment {
         btStamina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (availablePoints > 0) {
-                    availablePoints--;
+                if (players.get(playerNumber).getAvailablePoints() > 0) {
+                    players.get(playerNumber).setAvailablePoints(players.get(playerNumber).getAvailablePoints() - 1);
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     navController.popBackStack();
@@ -253,8 +293,8 @@ public class GameFragment extends Fragment {
         btAgility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (availablePoints > 0) {
-                    availablePoints--;
+                if (players.get(playerNumber).getAvailablePoints() > 0) {
+                    players.get(playerNumber).setAvailablePoints(players.get(playerNumber).getAvailablePoints() - 1);
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     navController.popBackStack();
@@ -266,8 +306,8 @@ public class GameFragment extends Fragment {
         btReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (availablePoints > 0) {
-                    availablePoints--;
+                if (players.get(playerNumber).getAvailablePoints() > 0) {
+                    players.get(playerNumber).setAvailablePoints(players.get(playerNumber).getAvailablePoints() - 1);
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     navController.popBackStack();
@@ -280,14 +320,9 @@ public class GameFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (((Button)view).getText().toString().toLowerCase() == "end game") {
-                    btRace.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                            navController.popBackStack();
-                            navController.navigate(R.id.startMenuFragment);
-                        }
-                    });
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.popBackStack();
+                    navController.navigate(R.id.startMenuFragment);
                 } else {
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
@@ -309,6 +344,8 @@ public class GameFragment extends Fragment {
             players.add(new Player("3", 200, 200, 200, 200));
             players.add(new Player("4", 200, 200, 200, 200));
             players.add(new Player("5", 200, 200, 200, 200));
+            ed.putInt("PLAYERS_AMOUNT", players.size());
+            ed.commit();
         } else {
             players = new ArrayList<>();
             for (int i = 0; i < playersAmount; i++) {
@@ -334,9 +371,10 @@ public class GameFragment extends Fragment {
             int reactionPoints = sPref.getInt("REACTION_POINTS" + String.valueOf(i), 1);
             if (reactionPoints != 1)
                 players.get(i).setReaction(reactionPoints);
+            int availablePoints = sPref.getInt("AVAILABLE_POINTS" + String.valueOf(i), 2);
+            players.get(i).setAvailablePoints(availablePoints);
         }
         raceNumber = sPref.getInt("RACE_NUMBER", 1);
-        availablePoints = sPref.getInt("AVAILABLE_POINTS", 2);
         if (sPref.getInt("DISTANCE" + String.valueOf(raceNumber), -1) == -1) {
             if (!isMultiplayer) {
                 randomRaces();
@@ -367,11 +405,11 @@ public class GameFragment extends Fragment {
 
     void saveData() {
         ed.putInt("RACE_NUMBER", raceNumber);
-        ed.putInt("AVAILABLE_POINTS", availablePoints);
         ed.putInt("PLAYERS_AMOUNT", players.size());
         for (int i = 0; i < players.size(); i++) {
             ed.putInt("POINTS" + String.valueOf(i), players.get(i).getPoints());
             ed.putString("NAME" + String.valueOf(i), players.get(i).getName());
+            ed.putInt("AVAILABLE_POINTS" + String.valueOf(i), players.get(i).getAvailablePoints());
             ed.putInt("SPEED_POINTS" + String.valueOf(i), players.get(i).getSpeed());
             ed.putInt("STAMINA_POINTS" + String.valueOf(i), players.get(i).getStamina());
             ed.putInt("AGILITY_POINTS" + String.valueOf(i), players.get(i).getAgility());
@@ -418,17 +456,20 @@ public class GameFragment extends Fragment {
                     else
                         player.setReaction(player.getReaction() + randomPoints);
                 }
+                players.get(i).setAvailablePoints(0);
             }
         }
     }
 
     void updateStats() {
         tvRaceNumber.setText("Race number " + String.valueOf(raceNumber));
-        tvAvailablePoints.setText("Stat Points " + String.valueOf(availablePoints));
+        tvAvailablePoints.setText("Stat Points " + String.valueOf(players.get(playerNumber).getAvailablePoints()));
         tvSpeed.setText(String.valueOf(players.get(playerNumber).getSpeed()));
         tvStamina.setText(String.valueOf(players.get(playerNumber).getStamina()));
         tvAgility.setText(String.valueOf(players.get(playerNumber).getAgility()));
         tvReaction.setText(String.valueOf(players.get(playerNumber).getReaction()));
+//        if (isMultiplayer)
+//            btRace.setVisibility(View.INVISIBLE);
         if (raceNumber >= 11) {
             btSpeed.setVisibility(View.INVISIBLE);
             btStamina.setVisibility(View.INVISIBLE);
@@ -436,6 +477,7 @@ public class GameFragment extends Fragment {
             btReaction.setVisibility(View.INVISIBLE);
             tvAvailablePoints.setVisibility(View.INVISIBLE);
             tvRaceNumber.setText("Champ is over");
+            btRace.setVisibility(View.VISIBLE);
             btRace.setText("end game");
         }
     }

@@ -32,6 +32,7 @@ public class Race extends View implements Runnable {
     boolean isGameOver;
     RaceFragment rf;
     int timeLeft;
+    int maxReaction;
 
     public Race(Context context, RaceFragment rf, ArrayList<Racer> racers, int distance, ArrayList<Boolean> jumps) {
         super(context);
@@ -40,6 +41,10 @@ public class Race extends View implements Runnable {
         paint = new Paint();
         isRunning = false;
         this.racers = racers;
+        maxReaction = 0;
+        for (int i = 0; i < racers.size(); i++) {
+            maxReaction = Math.max(maxReaction, racers.get(i).getReaction());
+        }
         colors = new ArrayList<>();
         colors.add(Color.BLUE);
         colors.add(Color.RED);
@@ -171,7 +176,7 @@ public class Race extends View implements Runnable {
     private void updateGame() {
         for (int i = 0; i < racers.size(); i++) {
             Racer racer = racers.get(i);
-            racer.move(jumps, raceTime);
+            racer.move(jumps, raceTime, maxReaction);
         }
     }
 }

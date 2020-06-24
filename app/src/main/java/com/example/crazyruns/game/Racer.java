@@ -26,8 +26,8 @@ public class Racer extends Player {
         time = 0;
     }
 
-    public void move(ArrayList<Boolean> jumps, float raceTime) {
-        if ((1000f - reaction) / 4 < raceTime) {
+    public void move(ArrayList<Boolean> jumps, float raceTime, int maxReaction) {
+        if ((maxReaction - reaction) < raceTime) {
             for (int i = 1; i < jumps.size() - 1; i++) {
                 if (Math.abs((posX - borderX) - (i * 100 - jumpHigh)) < 1 && jumps.get(i)) {
                     jump = 1;

@@ -8,6 +8,7 @@ public class Player {
     protected String name;
     protected int points;
     protected int listNumber;
+    protected int availablePoints;
 
     public Player(String name, int speed, int stamina, int agility, int reaction) {
         this.speed = speed;
@@ -16,6 +17,7 @@ public class Player {
         this.reaction = reaction;
         this.name = name;
         points = 0;
+        availablePoints = 2;
     }
 
     public int getSpeed() {
@@ -76,5 +78,13 @@ public class Player {
 
     public int getPower() {
         return speed + stamina + agility + reaction;
+    }
+
+    public int getAvailablePoints() {
+        return availablePoints;
+    }
+
+    public void setAvailablePoints(int availablePoints) {
+        this.availablePoints = availablePoints;
     }
 }
