@@ -36,7 +36,8 @@ public class AgilityFragment extends Fragment {
     */
     TextView tvPoints, tvTime;
     ImageView iv;
-    int waiting = -1, points = 0;
+    int waiting = -1;
+    float pointsFloat = 0;
     private int timeLeft;
     private Timer timer;
     private MyTimeTask timerTask;
@@ -61,50 +62,50 @@ public class AgilityFragment extends Fragment {
             @Override
             public void onSwipeTop() {
                 if (waiting == 0) {
-                    points += 2;
+                    pointsFloat += 1.5;
                     setData();
                 } else {
-                    points -= 3;
-                    if (points < 0)
-                        points = 0;
+                    pointsFloat -= 2;
+                    if (pointsFloat < 0)
+                        pointsFloat = 0;
                 }
-                tvPoints.setText(String.valueOf(points));
+                tvPoints.setText(String.valueOf(Math.round(pointsFloat)));
             }
             @Override
             public void onSwipeRight() {
                 if (waiting == 1) {
-                    points += 2;
+                    pointsFloat += 1.5;
                     setData();
                 } else {
-                    points -= 3;
-                    if (points < 0)
-                        points = 0;
+                    pointsFloat -= 2;
+                    if (pointsFloat < 0)
+                        pointsFloat = 0;
                 }
-                tvPoints.setText(String.valueOf(points));
+                tvPoints.setText(String.valueOf(Math.round(pointsFloat)));
             }
             @Override
             public void onSwipeBottom() {
                 if (waiting == 2) {
-                    points += 2;
+                    pointsFloat += 1.5;
                     setData();
                 } else {
-                    points -= 3;
-                    if (points < 0)
-                        points = 0;
+                    pointsFloat -= 2;
+                    if (pointsFloat < 0)
+                        pointsFloat = 0;
                 }
-                tvPoints.setText(String.valueOf(points));
+                tvPoints.setText(String.valueOf(Math.round(pointsFloat)));
             }
             @Override
             public void onSwipeLeft() {
                 if (waiting == 3) {
-                    points += 2;
+                    pointsFloat += 1.5;
                     setData();
                 } else {
-                    points -= 3;
-                    if (points < 0)
-                        points = 0;
+                    pointsFloat -= 2;
+                    if (pointsFloat < 0)
+                        pointsFloat = 0;
                 }
-                tvPoints.setText(String.valueOf(points));
+                tvPoints.setText(String.valueOf(Math.round(pointsFloat)));
             }
         });
 
@@ -225,7 +226,7 @@ public class AgilityFragment extends Fragment {
     private void gameOver () {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Bundle bundle = new Bundle();
-        bundle.putInt("AGILITY_POINTS", points);
+        bundle.putInt("AGILITY_POINTS", Math.round(pointsFloat));
         navController.popBackStack();
         navController.navigate(R.id.gameFragment, bundle);
     }

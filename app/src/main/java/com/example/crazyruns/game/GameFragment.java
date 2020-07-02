@@ -4,7 +4,11 @@ package com.example.crazyruns.game;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -12,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.crazyruns.R;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +34,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -60,13 +70,31 @@ public class GameFragment extends Fragment {
     private boolean isMultiplayer = false;
     private int playerNumber = 0;
     private String roomNumber;
+    private boolean raceStarted = false;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
 
 
     public GameFragment() {
     }
-
+/*
+    class MyTimeTask extends TimerTask {
+        public void run() {
+            if (raceStarted) {
+                raceStarted = false;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        players.get(playerNumber).setAvailablePoints(2);
+                        myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                        btRace.callOnClick();
+                    }
+                });
+//                timer.cancel();
+            }
+        }
+    }
+ */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,9 +122,68 @@ public class GameFragment extends Fragment {
             myRef = database.getReference("rooms").child(roomNumber);
         }
 
+        if (isMultiplayer) {
+            raceStarted = false;
+            /*
+            timer = new Timer();
+            timerTask = new MyTimeTask();
+            timer.schedule(timerTask, 0, 3000);
+             */
+        }
         loadData();
 
         if (isMultiplayer) {
+            final DatabaseReference avpRef = myRef.child("player" + String.valueOf(playerNumber)).child("availablePoints");
+/*
+            avpRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int availablePoints = dataSnapshot.getValue(Integer.class);
+                    players.get(playerNumber).setAvailablePoints(availablePoints);
+                    int allAvailablePoint = 0;
+                    for (int i = 0; i < players.size(); i++) {
+                        allAvailablePoint += players.get(i).getAvailablePoints();
+                    }
+                    if (allAvailablePoint == 0) {
+                        raceStarted = true;
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                players.get(playerNumber).setAvailablePoints(2);
+                                myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                                saveData();
+                                try {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                                            navController.popBackStack();
+                                            navController.navigate(R.id.raceFragment);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                }
+//                                btRace.callOnClick();
+                            }
+                        });
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                players.get(playerNumber).setAvailablePoints(2);
+                                myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                                btRace.callOnClick();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+*/
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -153,29 +240,31 @@ public class GameFragment extends Fragment {
                     for (int i = 0; i < players.size(); i++) {
                         allAvailablePoint += players.get(i).getAvailablePoints();
                     }
-                    /*
                     if (allAvailablePoint == 0) {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
+                        raceStarted = true;
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
                             public void run() {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        players.get(playerNumber).setAvailablePoints(2);
-                                        myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
-                                        btRace.callOnClick();
-                                    }
-                                });
+                                players.get(playerNumber).setAvailablePoints(2);
+                                myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
+                                saveData();
+                                try {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                                            navController.popBackStack();
+                                            navController.navigate(R.id.raceFragment);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                }
+//                                btRace.callOnClick();
                             }
-                        }, 1000);
-                        /*
-                        saveData();
-                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                        navController.popBackStack();
-                        navController.navigate(R.id.raceFragment);
+                        });
 
                     }
-                         */
                 }
 
                 @Override
@@ -193,34 +282,30 @@ public class GameFragment extends Fragment {
             int points = bundle.getInt("SPEED_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setSpeed(players.get(playerNumber).getSpeed() + points);
-                if (isMultiplayer) {
-                    myRef.child("player" + playerNumber).child("speed").setValue(players.get(playerNumber).getSpeed());
-                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
-                }
+//                if (isMultiplayer) {
+//                    myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
+//                }
             }
             points = bundle.getInt("STAMINA_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setStamina(players.get(playerNumber).getStamina() + points);
-                if (isMultiplayer) {
-                    myRef.child("player" + playerNumber).child("stamina").setValue(players.get(playerNumber).getStamina());
-                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
-                }
+//                if (isMultiplayer) {
+//                    myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
+//                }
             }
             points = bundle.getInt("AGILITY_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setAgility(players.get(playerNumber).getAgility() + points);
-                if (isMultiplayer) {
-                    myRef.child("player" + playerNumber).child("agility").setValue(players.get(playerNumber).getAgility());
-                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
-                }
+//                if (isMultiplayer) {
+//                    myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
+//                }
             }
             points = bundle.getInt("REACTION_POINTS", 1);
             if (points != 1) {
                 players.get(playerNumber).setReaction(players.get(playerNumber).getReaction() + points);
-                if (isMultiplayer) {
-                    myRef.child("player" + playerNumber).child("reaction").setValue(players.get(playerNumber).getReaction());
-                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
-                }
+//                if (isMultiplayer) {
+//                    myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
+//                }
             }
             boolean wasAdded = false;
             for (int i = 0; i < 10; i++) {
@@ -228,23 +313,24 @@ public class GameFragment extends Fragment {
                 if (points != -1) {
                     wasAdded = true;
                     players.get(i).setPoints(players.get(i).getPoints() + points);
-                    if (isMultiplayer) {
-                        myRef.child("player" + playerNumber).child("points").setValue(players.get(playerNumber).getPoints());
-                    }
+//                    if (isMultiplayer) {
+//                        myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
+//                    }
                 }
             }
             if (wasAdded) {
+                if (isMultiplayer)
+                    raceStarted = false;
                 raceNumber++;
                 players.get(playerNumber).setAvailablePoints(2);
-                if (isMultiplayer)
-                    myRef.child("player" + playerNumber).child("availablePoints").setValue(players.get(playerNumber).getAvailablePoints());
                 if (raceNumber < 11) {
                     upgradeBots();
                 }
             }
+            if (isMultiplayer)
+                myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
             updateStats();
         }
-
 
         recyclerView = root.findViewById(R.id.rv_players);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -324,6 +410,7 @@ public class GameFragment extends Fragment {
                     navController.popBackStack();
                     navController.navigate(R.id.startMenuFragment);
                 } else {
+//                    raceStarted.setValue(true);
                     saveData();
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     navController.popBackStack();
@@ -445,7 +532,7 @@ public class GameFragment extends Fragment {
             for (int i = 1; i < players.size(); i++) {
                 for (int j = 0; j < 2; j++) {
                     int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
-                    int randomPoints = ThreadLocalRandom.current().nextInt(40, 60);
+                    int randomPoints = ThreadLocalRandom.current().nextInt(40, 50);
                     Player player = players.get(i);
                     if (randomNum == 0)
                         player.setSpeed(player.getSpeed() + randomPoints);

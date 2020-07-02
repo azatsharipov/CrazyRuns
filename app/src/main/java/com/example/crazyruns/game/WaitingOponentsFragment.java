@@ -75,7 +75,7 @@ public class WaitingOponentsFragment extends Fragment {
                         randomRaces();
                     }
                 }
-                if (playersAmount == 2) {
+                if (playersAmount == 3) {
                     ed.putInt("PLAYERS_AMOUNT", playersAmount);
                     for (int i = 0; i < playersAmount; i++) {
                         Player player = new Player(name, 200, 200, 200, 200);
@@ -111,6 +111,7 @@ public class WaitingOponentsFragment extends Fragment {
             int distance = randomDistance * 100;
             DatabaseReference racesRef = myRef.child("races").child(String.valueOf(raceNumber));
             racesRef.child("distance").setValue(distance);
+            racesRef.child("isRace").setValue(false);
 //            ed.putInt("DISTANCE" + String.valueOf(raceNumber), distance);
             int jumpsAmount = -2;
             for (int i = 0; i <= distance; i += 100) {
