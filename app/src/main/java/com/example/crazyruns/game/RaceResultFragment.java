@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.crazyruns.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -69,6 +71,10 @@ public class RaceResultFragment extends Fragment {
     void setRacers() {
         bundle = getArguments();
         SharedPreferences sPref = getActivity().getPreferences(MODE_PRIVATE);
+        int playerNumber = sPref.getInt("PLAYER_NUMBER", 0);
+        String roomNumber = sPref.getString("ROOM_NUMBER", "0");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("rooms").child(roomNumber);
         for (int i = 0; i < 10; i++) {
             int points = bundle.getInt("POINTS" + String.valueOf(i), -1);
             String name = sPref.getString("NAME" + String.valueOf(i), "Noname");
@@ -79,6 +85,8 @@ public class RaceResultFragment extends Fragment {
             float time = bundle.getFloat("TIME" + String.valueOf(i), -1);
             if (time != -1)
                 racers.get(i).setTime(time);
+            if (playerNumber == i)
+                myRef.child("player" + playerNumber).setValue(points);
         }
     }
 

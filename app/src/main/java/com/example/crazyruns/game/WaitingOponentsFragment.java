@@ -111,7 +111,6 @@ public class WaitingOponentsFragment extends Fragment {
             int distance = randomDistance * 100;
             DatabaseReference racesRef = myRef.child("races").child(String.valueOf(raceNumber));
             racesRef.child("distance").setValue(distance);
-            racesRef.child("isRace").setValue(false);
 //            ed.putInt("DISTANCE" + String.valueOf(raceNumber), distance);
             int jumpsAmount = -2;
             for (int i = 0; i <= distance; i += 100) {
@@ -136,6 +135,7 @@ public class WaitingOponentsFragment extends Fragment {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("MULTIPLAYER", true);
+        ed.putString("ROOM_NUMBER", roomNumber);
         ed.commit();
         navController.navigate(R.id.gameFragment);
         myRef.removeEventListener(listener);
