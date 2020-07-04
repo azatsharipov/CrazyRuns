@@ -4,6 +4,7 @@ package com.example.crazyruns.game;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -32,12 +33,14 @@ public class WaitingOponentsFragment extends Fragment {
     private TextView tvPlayersAmount;
     private int playersAmount = 0;
     private int playerNumber = -1;
+    private int playersMax = 3;
     private String name;
     private String roomNumber;
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
+    DatabaseReference roomsRef;
     ValueEventListener listener;
 
 
@@ -51,8 +54,7 @@ public class WaitingOponentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_waiting_oponents, container, false);
         tvPlayersAmount = root.findViewById(R.id.tv_waiting_number);
-        roomNumber = "1";
-        myRef = database.getReference("rooms").child(roomNumber);
+        roomsRef = database.getReference("rooms");
         playersAmount = 0;
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         ed = sPref.edit();
@@ -75,7 +77,7 @@ public class WaitingOponentsFragment extends Fragment {
                         randomRaces();
                     }
                 }
-                if (playersAmount == 3) {
+                if (playersAmount == playersMax) {
                     ed.putInt("PLAYERS_AMOUNT", playersAmount);
                     for (int i = 0; i < playersAmount; i++) {
                         Player player = new Player(name, 200, 200, 200, 200);
@@ -99,7 +101,34 @@ public class WaitingOponentsFragment extends Fragment {
                 Log.w("MY", "Failed to read value.", error.toException());
             }
         };
-        myRef.addValueEventListener(listener);
+        roomsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int room = 1;
+                int amount = playersMax;
+                while (room < 5) {
+                    if (dataSnapshot.child(String.valueOf(room)).child("amount").getValue(Integer.class) == null) {
+                        amount = 0;
+                        break;
+                    } else {
+                        amount = dataSnapshot.child(String.valueOf(room)).child("amount").getValue(Integer.class);
+                        if (amount < playersMax)
+                            break;
+                        else
+                            room++;
+                    }
+                }
+                roomNumber = String.valueOf(room);
+                myRef = database.getReference("rooms").child(roomNumber);
+                myRef.child("amount").setValue(amount);
+                myRef.addValueEventListener(listener);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         return root;

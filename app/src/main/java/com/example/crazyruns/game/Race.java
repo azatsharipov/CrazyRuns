@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.crazyruns.R;
 
@@ -20,6 +21,8 @@ public class Race extends View implements Runnable {
     final float FPS = 60;
     final float SECOND = 1000000000;
     final float UPDATE_TIME = SECOND / FPS;
+    final int WIDTH = 1440;
+    final int HEIGHT = 720;
     int distance;
     float raceTime;
     Thread gameThread = null;
@@ -38,7 +41,6 @@ public class Race extends View implements Runnable {
 
     public Race(Context context, RaceFragment rf, ArrayList<Racer> racers, int distance, ArrayList<Boolean> jumps) {
         super(context);
-        Log.e("MY", "Race");
         this.rf = rf;
         paint = new Paint();
         isRunning = false;
@@ -52,7 +54,7 @@ public class Race extends View implements Runnable {
         colors.add(Color.RED);
         colors.add(Color.GREEN);
         colors.add(Color.YELLOW);
-        colors.add(Color.rgb(255, 127, 80));
+        colors.add(Color.rgb(255, 127, 80)); // Color.ORANGE
         places = new ArrayList<>();
         times = new ArrayList<>();
         this.jumps = jumps;
@@ -60,7 +62,6 @@ public class Race extends View implements Runnable {
     }
 
     public void startGame() {
-        Log.e("MY", "start");
         if (isRunning)
             return;
         isRunning = true;
@@ -78,18 +79,21 @@ public class Race extends View implements Runnable {
         }
     }
 
-    @SuppressLint("ResourceAsColor")
+    private int adaptWidth(int x) {
+        return x * getWidth() / WIDTH;
+    }
+
+    private int adaptHeight(int y) {
+        return y * getHeight() / HEIGHT;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.e("MY", "1");
         super.onDraw(canvas);
         int x = getWidth();
         int y = getHeight();
-        int radius;
-        radius = 25;
+        int radius = 25;
         clearScene(canvas);
-        paint.setColor(R.color.colorMenuBackground);
-        canvas.drawRect(0, 0, x, y, paint);
         drawLines(canvas);
         for (int i = 0; i < racers.size(); i++) {
             paint.setColor(colors.get(i));
@@ -104,9 +108,10 @@ public class Race extends View implements Runnable {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void clearScene(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
+        paint.setColor(R.color.colorMenuBackground);
         canvas.drawPaint(paint);
     }
 
@@ -137,9 +142,7 @@ public class Race extends View implements Runnable {
         float lastTime = System.nanoTime();
         float delta = 0;
         raceTime = 0;
-        Log.e("MY", "5");
         while (isRunning) {
-            Log.e("MY", "run");
             float nowTime = System.nanoTime();
             float elapsedTime = nowTime - lastTime;
             lastTime = nowTime;
