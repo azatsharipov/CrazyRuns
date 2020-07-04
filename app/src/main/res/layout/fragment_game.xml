@@ -10,13 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="vertical" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stats:"
-            android:textSize="@dimen/common_text" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,6 +21,8 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_gravity="center_vertical"
                 android:text="Speed"/>
@@ -33,17 +30,20 @@
                 android:id="@+id/tv_speed_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="1"/>
             <Button
                 android:id="@+id/bt_speed"
+                android:background="@drawable/bt_rounded_corners"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
-                android:text="ADD"/>
+                android:text="@string/add_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -54,6 +54,8 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_gravity="center_vertical"
                 android:text="Stamina"/>
@@ -61,17 +63,20 @@
                 android:id="@+id/tv_stamina_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="2"/>
             <Button
                 android:id="@+id/bt_stamina"
+                android:background="@drawable/bt_rounded_corners"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
-                android:text="ADD"/>
+                android:text="@string/add_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -82,6 +87,8 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_gravity="center_vertical"
                 android:text="Agility"/>
@@ -89,17 +96,20 @@
                 android:id="@+id/tv_agility_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="3"/>
             <Button
                 android:id="@+id/bt_agility"
+                android:background="@drawable/bt_rounded_corners"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
-                android:text="ADD"/>
+                android:text="@string/add_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -110,6 +120,8 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_gravity="center_vertical"
                 android:text="Reaction"/>
@@ -117,17 +129,20 @@
                 android:id="@+id/tv_reaction_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:textSize="@dimen/common_text"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="4"/>
             <Button
                 android:id="@+id/bt_reaction"
+                android:background="@drawable/bt_rounded_corners"
                 android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
-                android:text="ADD"/>
+                android:text="@string/add_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -138,13 +153,16 @@
                 android:id="@+id/bt_race"
                 android:text="Race!"
                 android:textSize="@dimen/common_text"
+                android:background="@drawable/bt_rounded_corners"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/tv_available_points"
                 android:layout_marginLeft="@dimen/border_margin"
-                android:text="Points: 0"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:text="Stat Points: 0"
                 android:textSize="@dimen/common_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -162,6 +180,9 @@
             android:id="@+id/tv_race_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:layout_marginHorizontal="@dimen/border_margin"
             android:text="Race number"
             android:textSize="@dimen/common_text"/>
 
@@ -172,6 +193,8 @@
             android:orientation="horizontal">
 
             <TextView
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:text="№"
                 android:textSize="@dimen/common_text"
                 android:layout_weight="2.5"
@@ -179,6 +202,8 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:text="Player's Name"
                 android:textSize="@dimen/common_text"
                 android:layout_weight="1.5"
@@ -186,6 +211,8 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:text="Pow"
                 android:textSize="@dimen/common_text"
                 android:layout_weight="2.5"
@@ -193,6 +220,8 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:text="P"
                 android:textSize="@dimen/common_text"
                 android:layout_weight="2.5"
@@ -217,6 +246,8 @@
 
             <TextView
                 android:id="@+id/tv_race_info_number"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -225,6 +256,8 @@
 
             <TextView
                 android:id="@+id/tv_distance"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
@@ -234,6 +267,8 @@
 
             <TextView
                 android:id="@+id/tv_jumps_amount"
+                android:textStyle="bold"
+                android:typeface="sans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"

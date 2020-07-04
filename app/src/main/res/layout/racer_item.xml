@@ -7,6 +7,8 @@
 
     <TextView
         android:id="@+id/racer_item_number"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:text="1"
         android:textSize="@dimen/common_text"
         android:layout_weight="2.5"
@@ -15,6 +17,8 @@
 
     <TextView
         android:id="@+id/racer_item_name"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:text="SomeName"
         android:textSize="@dimen/common_text"
         android:layout_weight="1.5"
@@ -23,6 +27,8 @@
 
     <TextView
         android:id="@+id/racer_item_power"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:text="100"
         android:textSize="@dimen/common_text"
         android:layout_weight="2.5"
@@ -31,6 +37,8 @@
 
     <TextView
         android:id="@+id/racer_item_points"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:text="10"
         android:textSize="@dimen/common_text"
         android:layout_weight="2.5"

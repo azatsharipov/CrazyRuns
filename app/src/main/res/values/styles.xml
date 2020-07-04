@@ -6,7 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorButtonNormal</item>
+        <item name="colorControlHighlight">@color/colorControlHighlight</item>
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="ButtonSpeedGameTheme" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorButtonNormal</item>
+        <item name="colorControlHighlight">@color/colorControlHighlight</item>
     </style>
 
 </resources>

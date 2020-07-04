@@ -39,6 +39,7 @@
 
         <Button
             android:id="@+id/bt_1"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -47,6 +48,7 @@
 
         <Button
             android:id="@+id/bt_2"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -55,6 +57,7 @@
 
         <Button
             android:id="@+id/bt_3"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -63,6 +66,7 @@
 
         <Button
             android:id="@+id/bt_4"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -71,6 +75,7 @@
 
         <Button
             android:id="@+id/bt_5"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -79,6 +84,7 @@
 
         <Button
             android:id="@+id/bt_6"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -87,6 +93,7 @@
 
         <Button
             android:id="@+id/bt_7"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -95,6 +102,7 @@
 
         <Button
             android:id="@+id/bt_8"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"
@@ -103,6 +111,7 @@
 
         <Button
             android:id="@+id/bt_9"
+            style="@style/ButtonSpeedGameTheme"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="@dimen/border_margin"

@@ -1,10 +1,12 @@
 package com.example.crazyruns.game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -76,6 +78,7 @@ public class Race extends View implements Runnable {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onDraw(Canvas canvas) {
         Log.e("MY", "1");
@@ -85,6 +88,8 @@ public class Race extends View implements Runnable {
         int radius;
         radius = 25;
         clearScene(canvas);
+        paint.setColor(R.color.colorMenuBackground);
+        canvas.drawRect(0, 0, x, y, paint);
         drawLines(canvas);
         for (int i = 0; i < racers.size(); i++) {
             paint.setColor(colors.get(i));

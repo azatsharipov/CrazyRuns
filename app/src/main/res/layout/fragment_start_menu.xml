@@ -8,6 +8,7 @@
 
     <Button
         android:id="@+id/bt_start"
+        android:background="@drawable/bt_rounded_corners"
         android:layout_width="@dimen/menu_bt_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -17,20 +18,23 @@
 
     <Button
         android:id="@+id/bt_multiplayer"
+        android:background="@drawable/bt_rounded_corners"
         android:layout_width="@dimen/menu_bt_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
         android:text="Multiplayer"
-        android:textSize="@dimen/common_text"/>
+        android:textSize="@dimen/common_text" />
 
     <EditText
         android:id="@+id/et_name"
         android:layout_width="@dimen/menu_bt_width"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
-        android:hint="enter your name"
+        android:hint="name"
         android:textSize="@dimen/common_text"/>
 
 </LinearLayout>
