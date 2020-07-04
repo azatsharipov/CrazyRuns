@@ -73,8 +73,7 @@ public class RaceResultFragment extends Fragment {
         SharedPreferences sPref = getActivity().getPreferences(MODE_PRIVATE);
         int playerNumber = sPref.getInt("PLAYER_NUMBER", 0);
         String roomNumber = sPref.getString("ROOM_NUMBER", "0");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("rooms").child(roomNumber);
+        boolean isMultiplayer = sPref.getBoolean("MULTIPLAYER", false);
         for (int i = 0; i < 10; i++) {
             int points = bundle.getInt("POINTS" + String.valueOf(i), -1);
             String name = sPref.getString("NAME" + String.valueOf(i), "Noname");
@@ -85,8 +84,11 @@ public class RaceResultFragment extends Fragment {
             float time = bundle.getFloat("TIME" + String.valueOf(i), -1);
             if (time != -1)
                 racers.get(i).setTime(time);
-            if (playerNumber == i)
-                myRef.child("player" + playerNumber).setValue(points);
+            if (isMultiplayer && playerNumber == i) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("rooms").child(roomNumber);
+                myRef.child("player" + playerNumber).child("points").setValue(points);
+            }
         }
     }
 

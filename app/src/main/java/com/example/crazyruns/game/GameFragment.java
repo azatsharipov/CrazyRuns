@@ -322,7 +322,8 @@ public class GameFragment extends Fragment {
                 points = bundle.getInt("POINTS" + String.valueOf(i), -1);
                 if (points != -1) {
                     wasAdded = true;
-                    players.get(i).setPoints(players.get(i).getPoints() + points);
+                    if (!isMultiplayer)
+                        players.get(i).setPoints(players.get(i).getPoints() + points);
 //                    if (isMultiplayer) {
 //                        myRef.child("player" + playerNumber).setValue(players.get(playerNumber));
 //                    }
@@ -430,11 +431,11 @@ public class GameFragment extends Fragment {
         int playersAmount = sPref.getInt("PLAYERS_AMOUNT", 0);
         if (playersAmount == 0) {
             players = new ArrayList<>();
-            players.add(new Player("I", 200, 200, 200, 200));
-            players.add(new Player("2", 200, 200, 200, 200));
-            players.add(new Player("3", 200, 200, 200, 200));
-            players.add(new Player("4", 200, 200, 200, 200));
-            players.add(new Player("5", 200, 200, 200, 200));
+            players.add(new Player("You", 200, 200, 200, 200));
+            players.add(new Player("Bot 1", 200, 200, 200, 200));
+            players.add(new Player("Bot 2", 200, 200, 200, 200));
+            players.add(new Player("Bot 3", 200, 200, 200, 200));
+            players.add(new Player("Bot 4", 200, 200, 200, 200));
             ed.putInt("PLAYERS_AMOUNT", players.size());
             ed.commit();
         } else {
