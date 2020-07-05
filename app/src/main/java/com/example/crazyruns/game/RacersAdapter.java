@@ -1,5 +1,6 @@
 package com.example.crazyruns.game;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
             }
         };
         this.players = (ArrayList<Player>) players.clone();
+        for (int i = 0; i < this.players.size(); i++) {
+            this.players.get(i).setPlayerNumber(i + 1);
+        }
         Collections.sort(this.players, cmp);
         for (int i = 0; i < this.players.size(); i++) {
             this.players.get(i).setListNumber(i + 1);
@@ -48,6 +52,10 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
             tvPower = itemView.findViewById(R.id.racer_item_power);
             tvPoints = itemView.findViewById(R.id.racer_item_points);
         }
+
+        public void setColor(int color) {
+            itemView.setBackgroundColor(color);
+        }
     }
 
     @NonNull
@@ -62,6 +70,16 @@ public class RacersAdapter extends RecyclerView.Adapter<RacersAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Player player = players.get(position);
+        if (player.getPlayerNumber() == 1)
+            holder.setColor(Color.BLUE);
+        else if (player.getPlayerNumber() == 2)
+            holder.setColor(Color.RED);
+        else if (player.getPlayerNumber() == 3)
+            holder.setColor(Color.GREEN);
+        else if (player.getPlayerNumber() == 4)
+            holder.setColor(Color.YELLOW);
+        else
+            holder.setColor(Color.rgb(255, 127, 80));
         holder.tvNumber.setText(String.valueOf(player.getListNumber()));
         holder.tvName.setText(player.getName());
         holder.tvPower.setText(String.valueOf(player.getPower()));

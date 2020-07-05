@@ -87,7 +87,8 @@ public class RaceResultFragment extends Fragment {
             if (isMultiplayer && playerNumber == i) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("rooms").child(roomNumber);
-                myRef.child("player" + playerNumber).child("points").setValue(points);
+                int allPoints = points + sPref.getInt("POINTS" + String.valueOf(i), 0);
+                myRef.child("player" + playerNumber).child("points").setValue(allPoints);
             }
         }
     }

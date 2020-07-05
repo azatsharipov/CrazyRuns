@@ -8,6 +8,7 @@ public class Player {
     protected String name;
     protected int points;
     protected int listNumber;
+    protected int playerNumber;
     protected int availablePoints;
 
     public Player(String name, int speed, int stamina, int agility, int reaction) {
@@ -86,5 +87,13 @@ public class Player {
 
     public void setAvailablePoints(int availablePoints) {
         this.availablePoints = availablePoints;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
     }
 }

@@ -2,10 +2,13 @@ package com.example.crazyruns.game;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -119,12 +122,36 @@ public class Race extends View implements Runnable {
         paint.setColor(Color.BLACK);
         float textSize = 30;
         paint.setTextSize(textSize);
-        float topLine = 150;
+        int topLine = 150;
+        paint.setStrokeWidth(5);
+        Resources res = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource(res, R.mipmap.ic_running_track_layer);
         for (int i = 0; i <= distance; i += 100) {
+            for (int j = 0; j < racers.size(); j++) {
+                canvas.drawBitmap(bitmap,
+                        null,
+                        new Rect(i,topLine + j * 100,100 + i,topLine + j * 100 + 100), paint);
+            }
+        }
+        for (int i = 0; i <= distance; i += 100) {
+            paint.setColor(Color.BLACK);
             canvas.drawText(String.valueOf(i) + "m", 50 + i, 125, paint);
             if (jumps.get(i / 100)) {
-                canvas.drawLine(100 + i, topLine, 100 + i, topLine + racers.size() * 100, paint);
+                paint.setColor(Color.WHITE);
+                if (i == 0 || i == distance) {
+                    canvas.drawLine(100 + i, topLine, 100 + i, topLine + racers.size() * 100, paint);
+                } else {
+                    for (int j = 0; j < racers.size(); j++) {
+                        canvas.drawLine(100 + i, topLine + j * 100 + 10, 100 + i, topLine + j * 100 + 90, paint);
+                    }
+                }
             }
+        }
+        paint.setColor(Color.WHITE);
+        textSize = 100;
+        paint.setTextSize(textSize);
+        for (int i = 0; i < racers.size(); i++) {
+            canvas.drawText(String.valueOf(i + 1), 25, topLine + i * 100 + 85, paint);
         }
         for (int i = 0; i <= racers.size(); i++) {
             canvas.drawLine(0, topLine + i * 100,
