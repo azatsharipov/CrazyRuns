@@ -180,6 +180,11 @@
                 android:typeface="sans"
                 android:text="Stat Points: 0"
                 android:textSize="@dimen/common_text"
+                android:textColor="@color/colorWhite"
+                android:shadowColor="@color/colorTextShadow"
+                android:shadowDx="-2"
+                android:shadowDy="-2"
+                android:shadowRadius="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -201,6 +206,11 @@
             android:typeface="sans"
             android:layout_marginHorizontal="@dimen/border_margin"
             android:text="Race number"
+            android:textColor="@color/colorWhite"
+            android:shadowColor="@color/colorTextShadow"
+            android:shadowDx="-2"
+            android:shadowDy="-2"
+            android:shadowRadius="1"
             android:textSize="@dimen/common_text"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

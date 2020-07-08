@@ -8,5 +8,6 @@
     <color name="colorControlHighlight">#673AB7</color>
     <color name="colorSky">#99CCFF</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTextShadow">#7F000000</color>
 
 </resources>
