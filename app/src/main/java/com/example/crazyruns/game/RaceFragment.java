@@ -3,7 +3,9 @@ package com.example.crazyruns.game;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -53,7 +55,6 @@ public class RaceFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_race, container, false);
-        Log.e("MY", "Fragment");
         loadStats();
         race = new Race(getActivity(), this, racers, distance, jumps);
 
@@ -61,6 +62,9 @@ public class RaceFragment extends Fragment {
         timer = new Timer();
         timerTask = new RaceFragment.MyTimeTask();
         timer.schedule(timerTask, 0, 1000);
+
+        Resources res = getResources();
+        race.setBackground(res.getDrawable(R.drawable.gradient_background));
 
         return race;
     }

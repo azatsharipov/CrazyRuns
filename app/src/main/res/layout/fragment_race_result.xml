@@ -16,6 +16,8 @@
         <TextView
             android:text="№"
             android:textSize="@dimen/common_text"
+            android:textStyle="bold"
+            android:typeface="sans"
             android:layout_weight="2.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -23,6 +25,8 @@
         <TextView
             android:text="Player's Name"
             android:textSize="@dimen/common_text"
+            android:textStyle="bold"
+            android:typeface="sans"
             android:layout_weight="1.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -30,6 +34,8 @@
         <TextView
             android:text="Time"
             android:textSize="@dimen/common_text"
+            android:textStyle="bold"
+            android:typeface="sans"
             android:layout_weight="2.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -37,6 +43,8 @@
         <TextView
             android:text="P"
             android:textSize="@dimen/common_text"
+            android:textStyle="bold"
+            android:typeface="sans"
             android:layout_weight="2.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

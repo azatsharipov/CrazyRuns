@@ -3,9 +3,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorMenuBackground">#D26CFFE1</color>
-    <color name="colorButtonNormal">#1a237e</color>
-    <color name="colorControlHighlight">#673ab7</color>
+    <color name="colorMenuBackground">#6CFFE1</color>
+    <color name="colorButtonNormal">#1A237E</color>
+    <color name="colorControlHighlight">#673AB7</color>
+    <color name="colorSky">#99CCFF</color>
     <color name="colorWhite">#FFFFFF</color>
 
 </resources>

@@ -29,7 +29,6 @@ public class Race extends View implements Runnable {
     int distance;
     float raceTime;
     Thread gameThread = null;
-    Player player;
     ArrayList<Racer> racers;
     ArrayList<Integer> colors;
     ArrayList<Integer> places;
@@ -96,7 +95,7 @@ public class Race extends View implements Runnable {
         int x = getWidth();
         int y = getHeight();
         int radius = 25;
-        clearScene(canvas);
+//        clearScene(canvas);
         drawLines(canvas);
         for (int i = 0; i < racers.size(); i++) {
             paint.setColor(colors.get(i));
@@ -104,18 +103,21 @@ public class Race extends View implements Runnable {
             canvas.drawCircle(racer.getPosX(), racer.getPosY(), radius, paint);
         }
         if (!isRunning && !isGameOver) {
-            float textSize = 100;
-            paint.setColor(Color.BLACK);
+            float textSize = 300;
+            paint.setColor(Color.WHITE);
             paint.setTextSize(textSize);
             canvas.drawText(String.valueOf(timeLeft), x / 2, y / 2, paint);
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     private void clearScene(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(R.color.colorMenuBackground);
-        canvas.drawPaint(paint);
+        paint.setColor(Color.WHITE);
+        Resources res = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.gradient_background);
+        canvas.drawBitmap(bitmap,
+                null,
+                new Rect(0,0, getWidth(), getHeight()), paint);
     }
 
     private void drawLines(Canvas canvas) {
@@ -126,36 +128,40 @@ public class Race extends View implements Runnable {
         paint.setStrokeWidth(5);
         Resources res = getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.mipmap.ic_running_track_layer);
-        for (int i = 0; i <= distance; i += 100) {
+        for (int i = 0; i < getWidth(); i += 100) {
             for (int j = 0; j < racers.size(); j++) {
                 canvas.drawBitmap(bitmap,
                         null,
                         new Rect(i,topLine + j * 100,100 + i,topLine + j * 100 + 100), paint);
             }
         }
+        paint.setColor(Color.WHITE);
         for (int i = 0; i <= distance; i += 100) {
-            paint.setColor(Color.BLACK);
             canvas.drawText(String.valueOf(i) + "m", 50 + i, 125, paint);
             if (jumps.get(i / 100)) {
-                paint.setColor(Color.WHITE);
                 if (i == 0 || i == distance) {
+                    paint.setStrokeWidth(5);
                     canvas.drawLine(100 + i, topLine, 100 + i, topLine + racers.size() * 100, paint);
                 } else {
                     for (int j = 0; j < racers.size(); j++) {
+                        paint.setStrokeWidth(8);
                         canvas.drawLine(100 + i, topLine + j * 100 + 10, 100 + i, topLine + j * 100 + 90, paint);
                     }
                 }
             }
         }
+        paint.setStrokeWidth(5);
         paint.setColor(Color.WHITE);
+        for (int i = 0; i <= racers.size(); i++) {
+            canvas.drawLine(0, topLine + i * 100,
+                    getWidth(), topLine + i * 100, paint);
+        }
         textSize = 100;
         paint.setTextSize(textSize);
         for (int i = 0; i < racers.size(); i++) {
             canvas.drawText(String.valueOf(i + 1), 25, topLine + i * 100 + 85, paint);
-        }
-        for (int i = 0; i <= racers.size(); i++) {
-            canvas.drawLine(0, topLine + i * 100,
-                    distance + 100, topLine + i * 100, paint);
+            if (!isRunning && !isGameOver)
+                canvas.drawText(racers.get(i).getName(), 125, topLine + i * 100 + 85, paint);
         }
     }
 

@@ -16,11 +16,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/border_margin">
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_directions_run_black_24dp"/>
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
@@ -30,16 +35,15 @@
                 android:id="@+id/tv_speed_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="1"/>
             <Button
                 android:id="@+id/bt_speed"
                 android:background="@drawable/bt_rounded_corners"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
@@ -49,11 +53,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/border_margin">
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_stamina"/>
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
@@ -63,16 +72,15 @@
                 android:id="@+id/tv_stamina_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="2"/>
             <Button
                 android:id="@+id/bt_stamina"
                 android:background="@drawable/bt_rounded_corners"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
@@ -82,11 +90,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/border_margin">
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_agility"/>
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
@@ -96,16 +109,15 @@
                 android:id="@+id/tv_agility_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="3"/>
             <Button
                 android:id="@+id/bt_agility"
                 android:background="@drawable/bt_rounded_corners"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
@@ -115,11 +127,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/border_margin">
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_timer_black_24dp"/>
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
@@ -129,16 +146,15 @@
                 android:id="@+id/tv_reaction_points"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tv_style"
                 android:textStyle="bold"
                 android:typeface="sans"
                 android:textSize="@dimen/common_text"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_gravity="center_vertical"
                 android:text="4"/>
             <Button
                 android:id="@+id/bt_reaction"
                 android:background="@drawable/bt_rounded_corners"
-                android:layout_marginLeft="@dimen/border_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/common_text"
@@ -190,6 +206,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/table_header_style"
             android:orientation="horizontal">
 
             <TextView
@@ -241,6 +258,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/table_header_style"
             android:orientation="horizontal">
 
             <TextView

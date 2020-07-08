@@ -21,7 +21,7 @@ public class Racer extends Player {
         this.posX = 75;
         this.jump = 0;
         currentSpeed = 0;
-        maxSpeed = 1;
+        maxSpeed = 1 + speed / 1000;
         potentialMaxSpeed = maxSpeed;
         time = 0;
     }
@@ -49,7 +49,7 @@ public class Racer extends Player {
                 posX += newSpeed;
                 if (posY >= mainPosY) {
                     jump = 0;
-                    currentSpeed /= 2;
+                    currentSpeed /= 4;
                 }
             } else
                 posX += currentSpeed;
